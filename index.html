@@ -1,807 +1,2250 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CompCommand</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
   <style>
     :root {
-      --bg:#f7f6f3;--surface:#fff;--s2:#f2f1ed;--s3:#ebe9e4;
-      --border:#e4e2db;--bstrong:#cdc9be;
-      --text:#1c1b18;--t2:#6b6760;--t3:#9b9890;
-      --accent:#d97706;--al:#fef3c7;
-      --green:#16a34a;--gl:#dcfce7;
-      --red:#dc2626;--rl:#fee2e2;
-      --blue:#2563eb;--bl:#dbeafe;
-      --purple:#7c3aed;--pl:#ede9fe;
-      --r:10px;--rs:6px;
-      --sh:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.04);
-      --shm:0 4px 16px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.04);
-      --shl:0 12px 40px rgba(0,0,0,.12);
+      --bg: #f7f6f3;
+      --surface: #fff;
+      --s2: #f2f1ed;
+      --s3: #ebe9e4;
+      --border: #e4e2db;
+      --bstrong: #cdc9be;
+      --text: #1c1b18;
+      --t2: #6b6760;
+      --t3: #9b9890;
+      --accent: #d97706;
+      --al: #fef3c7;
+      --green: #16a34a;
+      --gl: #dcfce7;
+      --red: #dc2626;
+      --rl: #fee2e2;
+      --blue: #2563eb;
+      --bl: #dbeafe;
+      --purple: #7c3aed;
+      --pl: #ede9fe;
+      --r: 10px;
+      --rs: 6px;
+      --sh: 0 1px 3px rgba(0, 0, 0, .05), 0 1px 2px rgba(0, 0, 0, .04);
+      --shm: 0 4px 16px rgba(0, 0, 0, .08), 0 2px 4px rgba(0, 0, 0, .04);
+      --shl: 0 12px 40px rgba(0, 0, 0, .12);
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:14px}
-    body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
 
-    .shell{display:flex;min-height:100vh}
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      font-size: 14px
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5
+    }
+
+    .shell {
+      display: flex;
+      min-height: 100vh
+    }
 
     /* Sidebar */
-    .sb{width:224px;min-width:224px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:20}
-    .sb-top{padding:17px 17px 14px;border-bottom:1px solid var(--border)}
-    .logo{display:flex;align-items:center;gap:9px}
-    .logo-mark{width:29px;height:29px;background:var(--text);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-    .logo-mark svg{width:14px;height:14px}
-    .logo-name{font-size:14.5px;font-weight:600;letter-spacing:-.3px}
-    .logo-sub{font-size:10px;color:var(--t3);margin-top:1px}
-    .sb-nav{flex:1;padding:10px 9px;overflow-y:auto}
-    .sec-lbl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:0 9px;margin:10px 0 3px}
-    .sec-lbl:first-child{margin-top:0}
-    .nb{display:flex;align-items:center;gap:7px;width:100%;padding:7px 9px;border:none;background:none;border-radius:var(--rs);font-family:'Sora',sans-serif;font-size:13px;font-weight:400;color:var(--t2);cursor:pointer;transition:all .12s;text-align:left}
-    .nb svg{width:14px;height:14px;flex-shrink:0;opacity:.6}
-    .nb:hover{background:var(--s2);color:var(--text)}
-    .nb:hover svg{opacity:1}
-    .nb.on{background:var(--s2);color:var(--text);font-weight:500}
-    .nb.on svg{opacity:1}
-    .sb-foot{padding:11px 15px;border-top:1px solid var(--border)}
-    .gw-status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--t2)}
-    .gwdot{width:7px;height:7px;border-radius:50%;background:var(--t3);flex-shrink:0;transition:background .3s}
-    .gwdot.on{background:var(--green);box-shadow:0 0 0 2px var(--gl)}
-    .gwdot.chk{background:var(--accent);animation:pulse 1s infinite}
+    .sb {
+      width: 224px;
+      min-width: 224px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 20
+    }
+
+    .sb-top {
+      padding: 17px 17px 14px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px
+    }
+
+    .logo-mark {
+      width: 29px;
+      height: 29px;
+      background: var(--text);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .logo-mark svg {
+      width: 14px;
+      height: 14px
+    }
+
+    .logo-name {
+      font-size: 14.5px;
+      font-weight: 600;
+      letter-spacing: -.3px
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      color: var(--t3);
+      margin-top: 1px
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: 10px 9px;
+      overflow-y: auto
+    }
+
+    .sec-lbl {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--t3);
+      padding: 0 9px;
+      margin: 10px 0 3px
+    }
+
+    .sec-lbl:first-child {
+      margin-top: 0
+    }
+
+    .nb {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      padding: 7px 9px;
+      border: none;
+      background: none;
+      border-radius: var(--rs);
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--t2);
+      cursor: pointer;
+      transition: all .12s;
+      text-align: left
+    }
+
+    .nb svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: .6
+    }
+
+    .nb:hover {
+      background: var(--s2);
+      color: var(--text)
+    }
+
+    .nb:hover svg {
+      opacity: 1
+    }
+
+    .nb.on {
+      background: var(--s2);
+      color: var(--text);
+      font-weight: 500
+    }
+
+    .nb.on svg {
+      opacity: 1
+    }
+
+    .sb-foot {
+      padding: 11px 15px;
+      border-top: 1px solid var(--border)
+    }
+
+    .gw-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: var(--t2)
+    }
+
+    .gwdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--t3);
+      flex-shrink: 0;
+      transition: background .3s
+    }
+
+    .gwdot.on {
+      background: var(--green);
+      box-shadow: 0 0 0 2px var(--gl)
+    }
+
+    .gwdot.chk {
+      background: var(--accent);
+      animation: pulse 1s infinite
+    }
 
     /* Main */
-    .main{margin-left:224px;flex:1;display:flex;flex-direction:column}
-    .topbar{background:var(--surface);border-bottom:1px solid var(--border);height:52px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
-    .tb-l{display:flex;align-items:center;gap:9px}
-    .pg-title{font-size:14.5px;font-weight:600}
-    .pg-crumb{font-size:12.5px;color:var(--t3)}
-    .tb-r{display:flex;align-items:center;gap:7px}
+    .main {
+      margin-left: 224px;
+      flex: 1;
+      display: flex;
+      flex-direction: column
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      height: 52px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10
+    }
+
+    .tb-l {
+      display: flex;
+      align-items: center;
+      gap: 9px
+    }
+
+    .pg-title {
+      font-size: 14.5px;
+      font-weight: 600
+    }
+
+    .pg-crumb {
+      font-size: 12.5px;
+      color: var(--t3)
+    }
+
+    .tb-r {
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
 
     /* Buttons */
-    .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--rs);font-family:'Sora',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;border:none;transition:all .12s;white-space:nowrap}
-    .btn svg{width:12px;height:12px;flex-shrink:0}
-    .btn-p{background:var(--text);color:#fff}.btn-p:hover{background:#2d2c28}
-    .btn-s{background:var(--surface);color:var(--text);border:1px solid var(--bstrong)}.btn-s:hover{background:var(--s2)}
-    .btn-g{background:transparent;color:var(--t2);border:1px solid transparent}.btn-g:hover{background:var(--s2);color:var(--text)}
-    .btn-d{background:var(--rl);color:var(--red);border:1px solid #fca5a5}.btn-d:hover{background:#fecaca}
-    .btn-sm{padding:5px 10px;font-size:12px}
-    .btn-xs{padding:4px 8px;font-size:11px}
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 13px;
+      border-radius: var(--rs);
+      font-family: 'Sora', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all .12s;
+      white-space: nowrap
+    }
+
+    .btn svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0
+    }
+
+    .btn-p {
+      background: var(--text);
+      color: #fff
+    }
+
+    .btn-p:hover {
+      background: #2d2c28
+    }
+
+    .btn-s {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--bstrong)
+    }
+
+    .btn-s:hover {
+      background: var(--s2)
+    }
+
+    .btn-g {
+      background: transparent;
+      color: var(--t2);
+      border: 1px solid transparent
+    }
+
+    .btn-g:hover {
+      background: var(--s2);
+      color: var(--text)
+    }
+
+    .btn-d {
+      background: var(--rl);
+      color: var(--red);
+      border: 1px solid #fca5a5
+    }
+
+    .btn-d:hover {
+      background: #fecaca
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px
+    }
+
+    .btn-xs {
+      padding: 4px 8px;
+      font-size: 11px
+    }
 
     /* Content & pages */
-    .content{padding:22px 24px;flex:1}
-    .page{display:none}.page.active{display:block}
+    .content {
+      padding: 22px 24px;
+      flex: 1
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
 
     /* Cards */
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh)}
-    .ch{padding:13px 17px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-    .ct{font-size:12.5px;font-weight:600}
-    .cb{padding:17px}
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: var(--sh)
+    }
+
+    .ch {
+      padding: 13px 17px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .ct {
+      font-size: 12.5px;
+      font-weight: 600
+    }
+
+    .cb {
+      padding: 17px
+    }
 
     /* Grid */
-    .g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-    .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
-    .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+    .g2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px
+    }
+
+    .g3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 13px
+    }
+
+    .g4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px
+    }
 
     /* Stats */
-    .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:15px 17px;box-shadow:var(--sh)}
-    .sl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:7px}
-    .sv{font-size:26px;font-weight:600;letter-spacing:-.5px;line-height:1;color:var(--text)}
-    .ss{font-size:11px;color:var(--t3);margin-top:4px}
-    .ss.up{color:var(--green)}
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 15px 17px;
+      box-shadow: var(--sh)
+    }
+
+    .sl {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--t3);
+      margin-bottom: 7px
+    }
+
+    .sv {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -.5px;
+      line-height: 1;
+      color: var(--text)
+    }
+
+    .ss {
+      font-size: 11px;
+      color: var(--t3);
+      margin-top: 4px
+    }
+
+    .ss.up {
+      color: var(--green)
+    }
 
     /* Team sections */
-    .team-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:20px}
-    .team-hd:first-child{margin-top:0}
-    .team-label{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600}
+    .team-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      margin-top: 20px
+    }
+
+    .team-hd:first-child {
+      margin-top: 0
+    }
+
+    .team-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 600
+    }
 
     /* Agent cards */
-    .ag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:11px}
-    .agc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:15px 17px;box-shadow:var(--sh);cursor:pointer;transition:box-shadow .15s,border-color .15s;position:relative}
-    .agc:hover{box-shadow:var(--shm);border-color:var(--bstrong)}
-    .agc.out{border-top:2px solid #93c5fd}
-    .agc.dev{border-top:2px solid #a78bfa}
-    .ag-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px}
-    .ag-ico{width:33px;height:33px;border-radius:8px;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px}
-    .ag-name{font-size:13px;font-weight:600;margin-bottom:2px}
-    .ag-role{font-size:11px;color:var(--t3);margin-bottom:9px}
-    .ag-foot{display:flex;align-items:center;justify-content:space-between;padding-top:9px;border-top:1px solid var(--border)}
-    .ag-last{font-size:10.5px;color:var(--t3);font-family:'JetBrains Mono',monospace}
-    .ag-btns{display:flex;gap:4px}
+    .ag-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+      gap: 11px
+    }
+
+    .agc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 15px 17px;
+      box-shadow: var(--sh);
+      cursor: pointer;
+      transition: box-shadow .15s, border-color .15s;
+      position: relative
+    }
+
+    .agc:hover {
+      box-shadow: var(--shm);
+      border-color: var(--bstrong)
+    }
+
+    .agc.out {
+      border-top: 2px solid #93c5fd
+    }
+
+    .agc.dev {
+      border-top: 2px solid #a78bfa
+    }
+
+    .ag-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 9px
+    }
+
+    .ag-ico {
+      width: 33px;
+      height: 33px;
+      border-radius: 8px;
+      background: var(--s2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px
+    }
+
+    .ag-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px
+    }
+
+    .ag-role {
+      font-size: 11px;
+      color: var(--t3);
+      margin-bottom: 9px
+    }
+
+    .ag-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 9px;
+      border-top: 1px solid var(--border)
+    }
+
+    .ag-last {
+      font-size: 10.5px;
+      color: var(--t3);
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    .ag-btns {
+      display: flex;
+      gap: 4px
+    }
 
     /* Badges */
-    .badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px}
-    .bdot{width:5px;height:5px;border-radius:50%;background:currentColor}
-    .bon{background:var(--gl);color:var(--green)}
-    .boff{background:var(--s2);color:var(--t3);border:1px solid var(--border)}
-    .brun{background:var(--al);color:var(--accent)}
-    .berr{background:var(--rl);color:var(--red)}
-    .bblue{background:var(--bl);color:var(--blue)}
-    .bpurp{background:var(--pl);color:var(--purple)}
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 20px
+    }
+
+    .bdot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor
+    }
+
+    .bon {
+      background: var(--gl);
+      color: var(--green)
+    }
+
+    .boff {
+      background: var(--s2);
+      color: var(--t3);
+      border: 1px solid var(--border)
+    }
+
+    .brun {
+      background: var(--al);
+      color: var(--accent)
+    }
+
+    .berr {
+      background: var(--rl);
+      color: var(--red)
+    }
+
+    .bblue {
+      background: var(--bl);
+      color: var(--blue)
+    }
+
+    .bpurp {
+      background: var(--pl);
+      color: var(--purple)
+    }
 
     /* Tags */
-    .tag{display:inline-flex;align-items:center;font-size:10px;font-weight:500;padding:2px 6px;border-radius:20px}
-    .tg{background:var(--s2);color:var(--t2);border:1px solid var(--border)}
-    .tgr{background:var(--gl);color:var(--green)}
-    .tam{background:var(--al);color:var(--accent)}
-    .tr{background:var(--rl);color:var(--red)}
-    .tbl{background:var(--bl);color:var(--blue)}
-    .tpu{background:var(--pl);color:var(--purple)}
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 20px
+    }
+
+    .tg {
+      background: var(--s2);
+      color: var(--t2);
+      border: 1px solid var(--border)
+    }
+
+    .tgr {
+      background: var(--gl);
+      color: var(--green)
+    }
+
+    .tam {
+      background: var(--al);
+      color: var(--accent)
+    }
+
+    .tr {
+      background: var(--rl);
+      color: var(--red)
+    }
+
+    .tbl {
+      background: var(--bl);
+      color: var(--blue)
+    }
+
+    .tpu {
+      background: var(--pl);
+      color: var(--purple)
+    }
 
     /* Forms */
-    .fr{margin-bottom:13px}
-    .fl{display:block;font-size:11.5px;font-weight:500;color:var(--t2);margin-bottom:5px}
-    .fi,.fsel,.fta{width:100%;padding:7px 10px;border:1px solid var(--bstrong);border-radius:var(--rs);font-family:'Sora',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .12s,box-shadow .12s}
-    .fi:focus,.fsel:focus,.fta:focus{border-color:var(--text);box-shadow:0 0 0 3px rgba(28,27,24,.07)}
-    .fta{resize:vertical;min-height:85px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.65}
-    .fr2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-    .fhint{font-size:10.5px;color:var(--t3);margin-top:3px}
+    .fr {
+      margin-bottom: 13px
+    }
+
+    .fl {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--t2);
+      margin-bottom: 5px
+    }
+
+    .fi,
+    .fsel,
+    .fta {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--bstrong);
+      border-radius: var(--rs);
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      transition: border-color .12s, box-shadow .12s
+    }
+
+    .fi:focus,
+    .fsel:focus,
+    .fta:focus {
+      border-color: var(--text);
+      box-shadow: 0 0 0 3px rgba(28, 27, 24, .07)
+    }
+
+    .fta {
+      resize: vertical;
+      min-height: 85px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1.65
+    }
+
+    .fr2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px
+    }
+
+    .fhint {
+      font-size: 10.5px;
+      color: var(--t3);
+      margin-top: 3px
+    }
 
     /* Terminal */
-    .term{background:#18171480;border:1px solid #2e2d2a;border-radius:var(--r);padding:13px 15px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.75;max-height:250px;overflow-y:auto;color:var(--t3)}
-    .term.full{max-height:480px}
-    .lg{display:flex;gap:9px}
-    .lt{color:#4a4845;flex-shrink:0}
-    .li{color:#9b9890}.lok{color:#4ade80}.lw{color:#fbbf24}.le{color:#f87171}.lag{color:#60a5fa}.lsy{color:#a78bfa}
+    .term {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 13px 15px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.75;
+      max-height: 250px;
+      overflow-y: auto;
+      color: var(--t2)
+    }
+
+    .term.full {
+      max-height: 480px
+    }
+
+    .lg {
+      display: flex;
+      gap: 9px
+    }
+
+    .lt {
+      color: var(--t3);
+      flex-shrink: 0
+    }
+
+    .li {
+      color: var(--t3)
+    }
+
+    .lok {
+      color: #059669
+    }
+
+    .lw {
+      color: #d97706
+    }
+
+    .le {
+      color: #dc2626
+    }
+
+    .lag {
+      color: #2563eb
+    }
+
+    .lsy {
+      color: #7c3aed
+    }
+
+    /* SVG Icons */
+    .svg-icon {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      display: inline-block;
+      vertical-align: middle
+    }
+
+    .ag-ico .svg-icon {
+      width: 18px;
+      height: 18px
+    }
+
+    .pn .svg-icon {
+      width: 22px;
+      height: 22px;
+      margin-bottom: 2px
+    }
+
+    .pi {
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
 
     /* Pipeline */
-    .pipe{display:flex;align-items:center;overflow-x:auto;padding-bottom:3px}
-    .pn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 13px;min-width:96px;border:1px solid var(--border);border-radius:var(--rs);background:var(--s2);cursor:pointer;transition:all .12s;flex-shrink:0}
-    .pn:hover{border-color:var(--bstrong)}
-    .pn.run{border-color:var(--accent);background:var(--al)}
-    .pn.done{border-color:#86efac;background:var(--gl)}
-    .pi{font-size:17px}.pnm{font-size:11px;font-weight:600}.pst{font-size:10px;color:var(--t3)}
-    .parr{color:var(--bstrong);padding:0 7px;font-size:15px;flex-shrink:0}
-    .prog{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:9px}
-    .pf{height:100%;background:var(--text);border-radius:2px;transition:width .4s ease}
+    .pipe {
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      padding-bottom: 3px
+    }
+
+    .pn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 11px 13px;
+      min-width: 96px;
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      background: var(--s2);
+      cursor: pointer;
+      transition: all .12s;
+      flex-shrink: 0
+    }
+
+    .pn:hover {
+      border-color: var(--bstrong)
+    }
+
+    .pn.run {
+      border-color: var(--accent);
+      background: var(--al)
+    }
+
+    .pn.done {
+      border-color: #86efac;
+      background: var(--gl)
+    }
+
+    .pi {
+      font-size: 17px
+    }
+
+    .pnm {
+      font-size: 11px;
+      font-weight: 600
+    }
+
+    .pst {
+      font-size: 10px;
+      color: var(--t3)
+    }
+
+    .parr {
+      color: var(--bstrong);
+      padding: 0 7px;
+      font-size: 15px;
+      flex-shrink: 0
+    }
+
+    .prog {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 9px
+    }
+
+    .pf {
+      height: 100%;
+      background: var(--text);
+      border-radius: 2px;
+      transition: width .4s ease
+    }
 
     /* Table */
-    .tw{overflow-x:auto}
-    table{width:100%;border-collapse:collapse}
-    th{text-align:left;padding:8px 12px;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--border);white-space:nowrap}
-    td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
-    tr:last-child td{border-bottom:none}
-    tbody tr:hover td{background:var(--s2)}
+    .tw {
+      overflow-x: auto
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--t3);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      vertical-align: middle
+    }
+
+    tr:last-child td {
+      border-bottom: none
+    }
+
+    tbody tr:hover td {
+      background: var(--s2)
+    }
 
     /* Modal */
-    .ov{display:none;position:fixed;inset:0;background:rgba(28,27,24,.45);z-index:100;align-items:center;justify-content:center}
-    .ov.open{display:flex}
-    .modal{background:var(--surface);border-radius:var(--r);box-shadow:var(--shl);width:540px;max-width:96vw;max-height:90vh;overflow-y:auto;animation:pop .17s ease}
-    .modal.wide{width:680px}
-    @keyframes pop{from{opacity:0;transform:translateY(9px) scale(.98)}to{opacity:1;transform:none}}
-    .mh{padding:15px 19px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-    .mt{font-size:13.5px;font-weight:600}
-    .mx{width:25px;height:25px;border-radius:var(--rs);border:none;background:var(--s2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:14px;transition:background .12s}
-    .mx:hover{background:var(--border)}
-    .mb{padding:19px}
-    .mf{padding:11px 19px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:6px}
+    .ov {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 27, 24, .45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center
+    }
+
+    .ov.open {
+      display: flex
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--r);
+      box-shadow: var(--shl);
+      width: 540px;
+      max-width: 96vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: pop .17s ease
+    }
+
+    .modal.wide {
+      width: 680px
+    }
+
+    @keyframes pop {
+      from {
+        opacity: 0;
+        transform: translateY(9px) scale(.98)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .mh {
+      padding: 15px 19px 13px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .mt {
+      font-size: 13.5px;
+      font-weight: 600
+    }
+
+    .mx {
+      width: 25px;
+      height: 25px;
+      border-radius: var(--rs);
+      border: none;
+      background: var(--s2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--t2);
+      font-size: 14px;
+      transition: background .12s
+    }
+
+    .mx:hover {
+      background: var(--border)
+    }
+
+    .mb {
+      padding: 19px
+    }
+
+    .mf {
+      padding: 11px 19px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px
+    }
 
     /* Tabs */
-    .tabs{display:flex;gap:2px;background:var(--s2);border-radius:var(--rs);padding:3px;width:fit-content;margin-bottom:15px}
-    .tb{padding:5px 12px;border-radius:4px;font-family:'Sora',sans-serif;font-size:12px;font-weight:400;color:var(--t2);cursor:pointer;border:none;background:none;transition:all .12s}
-    .tb.on{background:var(--surface);color:var(--text);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+    .tabs {
+      display: flex;
+      gap: 2px;
+      background: var(--s2);
+      border-radius: var(--rs);
+      padding: 3px;
+      width: fit-content;
+      margin-bottom: 15px
+    }
+
+    .tb {
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-family: 'Sora', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--t2);
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: all .12s
+    }
+
+    .tb.on {
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 500;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .07)
+    }
 
     /* Toggle */
-    .tog{position:relative;width:33px;height:18px;flex-shrink:0}
-    .tog input{opacity:0;width:0;height:0}
-    .ts2{position:absolute;inset:0;background:var(--bstrong);border-radius:20px;cursor:pointer;transition:background .18s}
-    .ts2::before{content:'';position:absolute;width:12px;height:12px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .18s}
-    .tog input:checked+.ts2{background:var(--text)}
-    .tog input:checked+.ts2::before{transform:translateX(15px)}
+    .tog {
+      position: relative;
+      width: 33px;
+      height: 18px;
+      flex-shrink: 0
+    }
+
+    .tog input {
+      opacity: 0;
+      width: 0;
+      height: 0
+    }
+
+    .ts2 {
+      position: absolute;
+      inset: 0;
+      background: var(--bstrong);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background .18s
+    }
+
+    .ts2::before {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform .18s
+    }
+
+    .tog input:checked+.ts2 {
+      background: var(--text)
+    }
+
+    .tog input:checked+.ts2::before {
+      transform: translateX(15px)
+    }
 
     /* Settings row */
-    .srow{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);gap:14px}
-    .srow:last-child{border-bottom:none}
-    .srlbl{font-size:13px;font-weight:500;margin-bottom:2px}
-    .srdesc{font-size:11px;color:var(--t3)}
+    .srow {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 14px
+    }
+
+    .srow:last-child {
+      border-bottom: none
+    }
+
+    .srlbl {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px
+    }
+
+    .srdesc {
+      font-size: 11px;
+      color: var(--t3)
+    }
 
     /* Offline banner */
-    .offbar{display:none;align-items:center;gap:8px;padding:9px 13px;margin-bottom:16px;background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);font-size:12px;color:var(--t2)}
-    .offbar.show{display:flex}
-    .offbar code{font-family:'JetBrains Mono',monospace;font-size:10.5px;background:var(--s3);padding:1px 5px;border-radius:3px}
+    .offbar {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      margin-bottom: 16px;
+      background: var(--s2);
+      border: 1px solid var(--border);
+      border-radius: var(--rs);
+      font-size: 12px;
+      color: var(--t2)
+    }
+
+    .offbar.show {
+      display: flex
+    }
+
+    .offbar code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      background: var(--s3);
+      padding: 1px 5px;
+      border-radius: 3px
+    }
 
     /* API status row */
-    .apirow{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);gap:10px}
-    .apirow:last-child{border-bottom:none}
-    .aname{font-size:12.5px;font-weight:500}
-    .asub{font-size:10.5px;color:var(--t3)}
+    .apirow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 10px
+    }
+
+    .apirow:last-child {
+      border-bottom: none
+    }
+
+    .aname {
+      font-size: 12.5px;
+      font-weight: 500
+    }
+
+    .asub {
+      font-size: 10.5px;
+      color: var(--t3)
+    }
 
     /* Conn row */
-    .cwr{display:flex;align-items:center;gap:7px;padding:7px 11px;border-radius:var(--rs);font-size:11.5px;color:var(--t2);background:var(--s2);border:1px solid var(--border);margin-bottom:14px}
-    .cwr.on{background:var(--gl);border-color:#86efac;color:var(--green)}
+    .cwr {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border-radius: var(--rs);
+      font-size: 11.5px;
+      color: var(--t2);
+      background: var(--s2);
+      border: 1px solid var(--border);
+      margin-bottom: 14px
+    }
+
+    .cwr.on {
+      background: var(--gl);
+      border-color: #86efac;
+      color: var(--green)
+    }
 
     /* Telegram preview */
-    .tgbg{background:#e5ddd5;border-radius:var(--rs);padding:13px}
-    .tgbub{background:#fff;border-radius:10px 10px 10px 3px;padding:9px 12px;max-width:88%;box-shadow:0 1px 2px rgba(0,0,0,.1)}
-    .tgfrom{font-size:11px;font-weight:600;color:#2563eb;margin-bottom:2px}
-    .tgtxt{font-size:12.5px;color:#1a1916;white-space:pre-wrap;line-height:1.5}
+    .tgbg {
+      background: #e5ddd5;
+      border-radius: var(--rs);
+      padding: 13px
+    }
+
+    .tgbub {
+      background: #fff;
+      border-radius: 10px 10px 10px 3px;
+      padding: 9px 12px;
+      max-width: 88%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .1)
+    }
+
+    .tgfrom {
+      font-size: 11px;
+      font-weight: 600;
+      color: #2563eb;
+      margin-bottom: 2px
+    }
+
+    .tgtxt {
+      font-size: 12.5px;
+      color: #1a1916;
+      white-space: pre-wrap;
+      line-height: 1.5
+    }
 
     /* Misc */
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .pulse{animation:pulse 1.4s ease-in-out infinite}
-    ::-webkit-scrollbar{width:4px;height:4px}
-    ::-webkit-scrollbar-thumb{background:var(--bstrong);border-radius:10px}
-    .mono{font-family:'JetBrains Mono',monospace}
-    .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
-    .sec-t{font-size:13px;font-weight:600}
-    .row{display:flex;align-items:center}
-    .gap6{gap:6px}.gap8{gap:8px}
-    .mt12{margin-top:12px}.mt16{margin-top:16px}
-    .mb12{margin-bottom:12px}.mb16{margin-bottom:16px}
-    .empty{text-align:center;padding:32px 20px;color:var(--t3);font-size:12px}
-    .divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    .pulse {
+      animation: pulse 1.4s ease-in-out infinite
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bstrong);
+      border-radius: 10px
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    .sec-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 11px
+    }
+
+    .sec-t {
+      font-size: 13px;
+      font-weight: 600
+    }
+
+    .row {
+      display: flex;
+      align-items: center
+    }
+
+    .gap6 {
+      gap: 6px
+    }
+
+    .gap8 {
+      gap: 8px
+    }
+
+    .mt12 {
+      margin-top: 12px
+    }
+
+    .mt16 {
+      margin-top: 16px
+    }
+
+    .mb12 {
+      margin-bottom: 12px
+    }
+
+    .mb16 {
+      margin-bottom: 16px
+    }
+
+    .empty {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--t3);
+      font-size: 12px
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 14px 0
+    }
   </style>
 </head>
+
 <body>
-<div class="shell">
+  <div class="shell">
 
-<!-- ═══ Sidebar ═══ -->
-<aside class="sb">
-  <div class="sb-top">
-    <div class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 15 15" fill="none">
-          <rect x="1" y="1" width="5.5" height="5.5" rx="1.2" fill="white"/>
-          <rect x="8.5" y="1" width="5.5" height="5.5" rx="1.2" fill="white" opacity=".55"/>
-          <rect x="1" y="8.5" width="5.5" height="5.5" rx="1.2" fill="white" opacity=".55"/>
-          <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.2" fill="white" opacity=".25"/>
-        </svg>
-      </div>
-      <div>
-        <div class="logo-name">CompCommand</div>
-        <div class="logo-sub">Agent Control Center</div>
-      </div>
-    </div>
-  </div>
-
-  <nav class="sb-nav">
-    <div class="sec-lbl">Overview</div>
-    <button class="nb on" data-p="dashboard">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
-      Dashboard
-    </button>
-    <button class="nb" data-p="logs">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Activity Log
-    </button>
-
-    <div class="sec-lbl">Outreach Team</div>
-    <button class="nb" data-p="out-pipe">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M1 8h3M7 8h2M12 8h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="5" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
-      Pipeline
-    </button>
-    <button class="nb" data-p="out-agents">
-      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Agents
-    </button>
-    <button class="nb" data-p="leads">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M13 2H3a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="currentColor" stroke-width="1.5"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Lead Sheet
-    </button>
-
-    <div class="sec-lbl">Dev Team — Complyze</div>
-    <button class="nb" data-p="dev-agents">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M4 5l-3 3 3 3M12 5l3 3-3 3M9 2l-2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Agents
-    </button>
-    <button class="nb" data-p="dev-runner">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M5 3l9 5-9 5V3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      Runner
-    </button>
-
-    <div class="sec-lbl">Manage</div>
-    <button class="nb" data-p="create-agent">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Create Agent
-    </button>
-    <button class="nb" data-p="settings">
-      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Settings
-    </button>
-    <button class="nb" data-p="telegram">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M14 2L1 7l5 2 2 5 2-4 4 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      Telegram
-    </button>
-  </nav>
-
-  <div class="sb-foot">
-    <div class="gw-status">
-      <div class="gwdot chk" id="gwDot"></div>
-      <span id="gwTxt">Connecting…</span>
-    </div>
-  </div>
-</aside>
-
-<!-- ═══ Main ═══ -->
-<main class="main">
-  <div class="topbar">
-    <div class="tb-l">
-      <span class="pg-title" id="pgT">Dashboard</span>
-      <span class="pg-crumb" id="pgC"></span>
-    </div>
-    <div class="tb-r">
-      <button class="btn btn-g btn-sm" onclick="refreshAll()">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 8A5.5 5.5 0 112.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 2.5v3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Refresh
-      </button>
-      <button class="btn btn-s btn-sm" onclick="go('create-agent')">+ New Agent</button>
-      <button class="btn btn-p btn-sm" onclick="runPipe()">▶ Run Pipeline</button>
-    </div>
-  </div>
-
-  <div class="content">
-
-  <!-- DASHBOARD -->
-  <div id="pg-dashboard" class="page active">
-    <div class="offbar" id="offbar">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3.5M8 11h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Your agents are offline and asleep — run <code>openclaw gateway</code> to wake them
-    </div>
-    <div class="g4 mb16">
-      <div class="stat"><div class="sl">Total Agents</div><div class="sv" id="ds-tot">8</div><div class="ss">4 outreach · 4 dev</div></div>
-      <div class="stat"><div class="sl">Leads This Week</div><div class="sv" id="ds-leads">0</div><div class="ss up" id="ds-lsub">Run pipeline to start</div></div>
-      <div class="stat"><div class="sl">Pipeline</div><div class="sv" id="ds-pipe">Idle</div><div class="ss" id="ds-psub">Last run: never</div></div>
-      <div class="stat"><div class="sl">Apollo Quota</div><div class="sv">50</div><div class="ss">remaining this month</div></div>
-    </div>
-    <div class="g2">
-      <div class="card">
-        <div class="ch"><span class="ct">Outreach Pipeline</span><span class="tag tg" id="ptag">Idle</span></div>
-        <div class="cb">
-          <div class="pipe mb12">
-            <div class="pn" id="pn-scout"><span class="pi">🔍</span><span class="pnm">Scout</span><span class="pst" id="ps-scout">Idle</span></div>
-            <div class="parr">→</div>
-            <div class="pn" id="pn-enricher"><span class="pi">🔎</span><span class="pnm">Enricher</span><span class="pst" id="ps-enricher">Idle</span></div>
-            <div class="parr">→</div>
-            <div class="pn" id="pn-drafter"><span class="pi">✍️</span><span class="pnm">Drafter</span><span class="pst" id="ps-drafter">Idle</span></div>
-            <div class="parr">→</div>
-            <div class="pn" id="pn-sheets"><span class="pi">📊</span><span class="pnm">Sheets</span><span class="pst" id="ps-sheets">Idle</span></div>
+    <!-- ═══ Sidebar ═══ -->
+    <aside class="sb">
+      <div class="sb-top">
+        <div class="logo">
+          <div class="logo-mark">
+            <svg viewBox="0 0 15 15" fill="none">
+              <rect x="1" y="1" width="5.5" height="5.5" rx="1.2" fill="white" />
+              <rect x="8.5" y="1" width="5.5" height="5.5" rx="1.2" fill="white" opacity=".55" />
+              <rect x="1" y="8.5" width="5.5" height="5.5" rx="1.2" fill="white" opacity=".55" />
+              <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1.2" fill="white" opacity=".25" />
+            </svg>
           </div>
-          <div class="prog"><div class="pf" id="pbar" style="width:0%"></div></div>
-          <div class="row gap6 mt12">
-            <button class="btn btn-p btn-sm" onclick="runPipe()">Run All</button>
-            <button class="btn btn-s btn-sm" onclick="runAgent('scout')">Scout Only</button>
-            <button class="btn btn-s btn-sm" onclick="runAgent('drafter')">Redraft</button>
+          <div>
+            <div class="logo-name">CompCommand</div>
+            <div class="logo-sub">Agent Control Center</div>
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="ch"><span class="ct">Live Activity</span></div>
-        <div class="term" id="dashLog"><div class="lg"><span class="lt">--:--:--</span><span class="li">Waiting…</span></div></div>
-      </div>
-    </div>
-    <div class="g2 mt12">
-      <div class="card">
-        <div class="ch"><span class="ct">Dev Team — Complyze</span><span class="badge bpurp">4 agents</span></div>
-        <div style="padding:0">
-          <table><thead><tr><th>Agent</th><th>Status</th><th>Last Task</th><th></th></tr></thead>
-          <tbody id="devSum"></tbody></table>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><span class="ct">Gateway & APIs</span></div>
-        <div class="cb">
-          <div class="cwr" id="cwrRow"><div class="gwdot chk" id="cwrDot"></div><span id="cwrTxt">Checking…</span></div>
-          <div class="apirow"><div><div class="aname">OpenClaw Gateway</div><div class="asub mono" style="font-size:10px" id="gwUrl2">localhost:18789</div></div><span class="badge boff" id="gwBadge">Offline</span></div>
-          <div class="apirow"><div><div class="aname">Anthropic</div><div class="asub" id="antS">Not configured</div></div><span class="badge boff" id="antB">—</span></div>
-          <div class="apirow"><div><div class="aname">Apollo.io</div><div class="asub" id="apolS">Not configured</div></div><span class="badge boff" id="apolB">—</span></div>
-          <div class="apirow"><div><div class="aname">Exa.ai</div><div class="asub" id="exaS">Not configured</div></div><span class="badge boff" id="exaB">—</span></div>
-          <button class="btn btn-s btn-sm mt12" onclick="checkGW()">Test Connection</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- OUTREACH PIPELINE -->
-  <div id="pg-out-pipe" class="page">
-    <div class="card mb12">
-      <div class="ch"><span class="ct">Outreach Pipeline</span></div>
-      <div class="cb">
-        <div class="pipe mb12">
-          <div class="pn" onclick="openAM('scout')"><span class="pi">🔍</span><span class="pnm">Scout</span><span class="pst">Click to edit</span></div>
-          <div class="parr">→</div>
-          <div class="pn" onclick="openAM('enricher')"><span class="pi">🔎</span><span class="pnm">Enricher</span><span class="pst">Click to edit</span></div>
-          <div class="parr">→</div>
-          <div class="pn" onclick="openAM('drafter')"><span class="pi">✍️</span><span class="pnm">Drafter</span><span class="pst">Click to edit</span></div>
-          <div class="parr">→</div>
-          <div class="pn" onclick="openAM('sheets')"><span class="pi">📊</span><span class="pnm">SheetsBot</span><span class="pst">Click to edit</span></div>
-        </div>
-        <div class="row gap6">
-          <button class="btn btn-p btn-sm" onclick="runPipe()">▶ Run Full Pipeline</button>
-          <button class="btn btn-s btn-sm" onclick="runAgent('scout')">Scout Only</button>
-          <button class="btn btn-s btn-sm" onclick="runAgent('enricher')">Enrich Only</button>
-          <button class="btn btn-s btn-sm" onclick="runAgent('drafter')">Redraft Emails</button>
-          <button class="btn btn-s btn-sm" onclick="runAgent('sheets')">Push to Sheet</button>
+      <nav class="sb-nav">
+        <div class="sec-lbl">Overview</div>
+        <button class="nb on" data-p="dashboard">
+          <svg viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+            <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+            <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+            <rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          Dashboard
+        </button>
+        <button class="nb" data-p="logs">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          Activity Log
+        </button>
+
+        <div class="sec-lbl">Outreach Team</div>
+        <button class="nb" data-p="out-pipe">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M1 8h3M7 8h2M12 8h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            <circle cx="4.5" cy="8" r="2" stroke="currentColor" stroke-width="1.5" />
+            <circle cx="9" cy="5" r="2" stroke="currentColor" stroke-width="1.5" />
+            <circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          Pipeline
+        </button>
+        <button class="nb" data-p="out-agents">
+          <svg viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5" />
+            <path d="M2 14c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" />
+          </svg>
+          Agents
+        </button>
+        <button class="nb" data-p="leads">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M13 2H3a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V3a1 1 0 00-1-1z" stroke="currentColor"
+              stroke-width="1.5" />
+            <path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          Lead Sheet
+        </button>
+
+        <div class="sec-lbl">Dev Team — Complyze</div>
+        <button class="nb" data-p="dev-agents">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M4 5l-3 3 3 3M12 5l3 3-3 3M9 2l-2 12" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Agents
+        </button>
+        <button class="nb" data-p="dev-runner">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M5 3l9 5-9 5V3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+          Runner
+        </button>
+
+        <div class="sec-lbl">Manage</div>
+        <button class="nb" data-p="create-agent">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          Create Agent
+        </button>
+        <button class="nb" data-p="settings">
+          <svg viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5" />
+            <path
+              d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+          Settings
+        </button>
+        <button class="nb" data-p="telegram">
+          <svg viewBox="0 0 16 16" fill="none">
+            <path d="M14 2L1 7l5 2 2 5 2-4 4 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+          Telegram
+        </button>
+      </nav>
+
+      <div class="sb-foot">
+        <div class="gw-status">
+          <div class="gwdot chk" id="gwDot"></div>
+          <span id="gwTxt">Connecting…</span>
         </div>
       </div>
-    </div>
-    <div class="card"><div class="ch"><span class="ct">Pipeline Log</span></div><div class="term full" id="pipeLog"><div class="lg"><span class="lt">--:--:--</span><span class="li">No runs yet.</span></div></div></div>
-  </div>
+    </aside>
 
-  <!-- OUTREACH AGENTS -->
-  <div id="pg-out-agents" class="page">
-    <div class="sec-hd">
-      <div class="row gap6"><span class="sec-t">Outreach Team</span><span class="badge bblue">4 agents</span></div>
-      <button class="btn btn-p btn-sm" onclick="go('create-agent')">+ New Agent</button>
-    </div>
-    <div class="ag-grid" id="outGrid"></div>
-  </div>
-
-  <!-- LEADS -->
-  <div id="pg-leads" class="page">
-    <div class="sec-hd">
-      <span class="sec-t">Lead Sheet</span>
-      <div class="row gap6">
-        <button class="btn btn-s btn-sm" onclick="openSheet()">↗ Open Google Sheets</button>
-        <button class="btn btn-p btn-sm" onclick="runAgent('sheets')">Sync Now</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ch"><span class="ct">Drafted Leads</span><span class="tag tg" id="leadTag">0 leads</span></div>
-      <div class="tw"><table><thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Industry</th><th>Score</th><th>Subject</th><th>Status</th></tr></thead>
-      <tbody id="leadsB"><tr><td colspan="7"><div class="empty">No leads yet. Run the pipeline.</div></td></tr></tbody></table></div>
-    </div>
-  </div>
-
-  <!-- DEV AGENTS -->
-  <div id="pg-dev-agents" class="page">
-    <div class="sec-hd">
-      <div class="row gap6"><span class="sec-t">Dev Team — Complyze</span><span class="badge bpurp">4 agents</span></div>
-      <button class="btn btn-p btn-sm" onclick="go('create-agent')">+ New Agent</button>
-    </div>
-    <div class="ag-grid" id="devGrid"></div>
-  </div>
-
-  <!-- DEV RUNNER -->
-  <div id="pg-dev-runner" class="page">
-    <div class="card mb12">
-      <div class="ch"><span class="ct">Dev Command Runner</span></div>
-      <div class="cb">
-        <div class="fr"><label class="fl">Target Agent</label>
-          <select class="fsel" id="devAg">
-            <option value="complyze-qa">🧪 QA Agent</option>
-            <option value="complyze-coder">🔧 Coder Agent</option>
-            <option value="complyze-deployer">🚀 Deployer Agent</option>
-            <option value="complyze-security">🔐 Security Agent</option>
-          </select>
+    <!-- ═══ Main ═══ -->
+    <main class="main">
+      <div class="topbar">
+        <div class="tb-l">
+          <span class="pg-title" id="pgT">Dashboard</span>
+          <span class="pg-crumb" id="pgC"></span>
         </div>
-        <div class="fr"><label class="fl">Command / Task</label>
-          <textarea class="fta" id="devCmd" placeholder="e.g. Run full test suite for browser→desktop config&#10;e.g. Fix the URL scheme handler bug from QA-001&#10;e.g. Build and sign v1.0.2 — QA approved"></textarea>
-        </div>
-        <button class="btn btn-p" onclick="sendDevCmd()">▶ Send Command</button>
-      </div>
-    </div>
-    <div class="card"><div class="ch"><span class="ct">Output</span></div><div class="term full" id="devLog"><div class="lg"><span class="lsy">Dev runner ready.</span></div></div></div>
-  </div>
-
-  <!-- CREATE AGENT -->
-  <div id="pg-create-agent" class="page">
-    <div class="card" style="max-width:560px">
-      <div class="ch"><span class="ct">Create New Agent</span></div>
-      <div class="cb">
-        <div class="fr2 mb12">
-          <div class="fr" style="margin-bottom:0"><label class="fl">Agent ID</label><input class="fi mono" id="na-id" placeholder="my-agent" /></div>
-          <div class="fr" style="margin-bottom:0"><label class="fl">Emoji</label><input class="fi" id="na-emoji" value="🤖" style="max-width:66px" /></div>
-        </div>
-        <div class="fr"><label class="fl">Display Name</label><input class="fi" id="na-name" placeholder="My Agent" /></div>
-        <div class="fr"><label class="fl">Role / Description</label><input class="fi" id="na-role" placeholder="What does this agent do?" /></div>
-        <div class="fr"><label class="fl">Team</label><select class="fsel" id="na-team"><option value="outreach">Outreach Team</option><option value="dev">Dev Team</option></select></div>
-        <div class="fr"><label class="fl">SOUL.md — Personality</label><textarea class="fta" id="na-soul" placeholder="You are a…" style="min-height:100px"></textarea></div>
-        <div class="fr"><label class="fl">AGENTS.md — Instructions</label><textarea class="fta" id="na-instr" placeholder="## Mission&#10;…" style="min-height:120px"></textarea></div>
-        <div class="fr"><label class="fl">HEARTBEAT.md <span style="color:var(--t3)">(optional)</span></label><textarea class="fta" id="na-hb" placeholder="## Weekly&#10;- [ ] …" style="min-height:60px"></textarea></div>
-        <div class="row gap6"><button class="btn btn-p" onclick="createAgent()">Create Agent</button><button class="btn btn-s" onclick="go('out-agents')">Cancel</button></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LOGS -->
-  <div id="pg-logs" class="page">
-    <div class="card"><div class="ch"><span class="ct">Activity Log</span><button class="btn btn-g btn-sm" onclick="clearLogs()">Clear</button></div>
-    <div class="term full" style="max-height:560px" id="fullLog"><div class="lg"><span class="li">No activity.</span></div></div></div>
-  </div>
-
-  <!-- SETTINGS -->
-  <div id="pg-settings" class="page">
-    <div style="max-width:560px">
-      <div class="card mb12">
-        <div class="ch"><span class="ct">API Keys</span></div>
-        <div class="cb">
-          <div class="fr"><label class="fl">Anthropic API Key</label><input class="fi mono" type="password" id="s-ant" placeholder="sk-ant-…" /><div class="fhint">Used by Drafter for email generation</div></div>
-          <div class="fr"><label class="fl">Apollo.io API Key</label><input class="fi mono" type="password" id="s-apol" placeholder="Apollo key…" /><div class="fhint">Free tier — 50 exports/month</div></div>
-          <div class="fr"><label class="fl">Exa.ai API Key</label><input class="fi mono" type="password" id="s-exa" placeholder="Exa key…" /><div class="fhint">Free tier — 1,000 searches/month</div></div>
-          <div class="fr"><label class="fl">Google Sheet URL</label><input class="fi" id="s-sheet" placeholder="https://docs.google.com/spreadsheets/d/…" /></div>
-          <button class="btn btn-p" onclick="saveSettings()">Save API Keys</button>
+        <div class="tb-r">
+          <button class="btn btn-g btn-sm" onclick="refreshAll()">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M13.5 8A5.5 5.5 0 112.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M13.5 2.5v3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            Refresh
+          </button>
+          <button class="btn btn-s btn-sm" onclick="go('create-agent')">+ New Agent</button>
+          <button class="btn btn-p btn-sm" onclick="runPipe()">▶ Run Pipeline</button>
         </div>
       </div>
-      <div class="card mb12">
-        <div class="ch"><span class="ct">OpenClaw Gateway</span></div>
-        <div class="cb">
-          <div class="fr"><label class="fl">Gateway URL</label><input class="fi mono" id="s-gw" value="http://localhost:18789" /><div class="fhint">Default: local. Change if running on a VPS.</div></div>
-          <div class="row gap6"><button class="btn btn-p" onclick="saveSettings()">Save</button><button class="btn btn-s" onclick="checkGW()">Test Connection</button></div>
-        </div>
-      </div>
-      <div class="card mb12">
-        <div class="ch"><span class="ct">Pipeline Schedule</span></div>
-        <div class="cb">
-          <div class="srow"><div><div class="srlbl">Auto-run weekly</div><div class="srdesc">Runs Scout → Sheets every Monday 8am via HEARTBEAT</div></div><label class="tog"><input type="checkbox" id="tog-w"/><span class="ts2"></span></label></div>
-          <div class="srow"><div><div class="srlbl">Telegram notifications</div><div class="srdesc">Notify when sheet is ready for review</div></div><label class="tog"><input type="checkbox" id="tog-t" checked/><span class="ts2"></span></label></div>
-          <div class="srow"><div><div class="srlbl">Deduplicate leads</div><div class="srdesc">Skip contacts already in seen.csv</div></div><label class="tog"><input type="checkbox" id="tog-d" checked/><span class="ts2"></span></label></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><span class="ct">ICP Configuration</span></div>
-        <div class="cb">
-          <div class="fr"><label class="fl">Target Titles</label><textarea class="fta" id="s-titles" style="min-height:60px">Chief Compliance Officer, VP of Compliance, Director of Compliance, Chief Risk Officer, CISO, Head of AI, Director of GRC</textarea></div>
-          <div class="fr"><label class="fl">Target Industries</label><textarea class="fta" id="s-industries" style="min-height:50px">Financial Services, Banking, Insurance, Healthcare, Legal Services, Fintech</textarea></div>
-          <div class="fr"><label class="fl">Company Size</label><div class="row gap6"><input class="fi" id="s-min" value="100" style="max-width:74px"/><span style="color:var(--t3);font-size:11.5px">to</span><input class="fi" id="s-max" value="1000" style="max-width:74px"/><span style="color:var(--t3);font-size:11.5px">employees</span></div></div>
-          <button class="btn btn-p" onclick="saveSettings()">Save ICP Config</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- TELEGRAM -->
-  <div id="pg-telegram" class="page">
-    <div style="max-width:520px">
-      <div class="card mb12">
-        <div class="ch"><span class="ct">Offline Message</span></div>
-        <div class="cb">
-          <p style="font-size:12px;color:var(--t2);margin-bottom:12px">Sent when OpenClaw is offline instead of a confusing error.</p>
-          <div class="fr"><label class="fl">Message</label><textarea class="fta" id="tg-off" style="min-height:75px" oninput="prevTg()">Your agents are offline and asleep.
+      <div class="content">
+
+        <!-- DASHBOARD -->
+        <div id="pg-dashboard" class="page active">
+          <div class="offbar" id="offbar">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5" />
+              <path d="M8 5v3.5M8 11h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            Your agents are offline and asleep — run <code>openclaw gateway</code> to wake them
+          </div>
+          <div class="g4 mb16">
+            <div class="stat">
+              <div class="sl">Total Agents</div>
+              <div class="sv" id="ds-tot">8</div>
+              <div class="ss">4 outreach · 4 dev</div>
+            </div>
+            <div class="stat">
+              <div class="sl">Leads This Week</div>
+              <div class="sv" id="ds-leads">0</div>
+              <div class="ss up" id="ds-lsub">Run pipeline to start</div>
+            </div>
+            <div class="stat">
+              <div class="sl">Pipeline</div>
+              <div class="sv" id="ds-pipe">Idle</div>
+              <div class="ss" id="ds-psub">Last run: never</div>
+            </div>
+            <div class="stat">
+              <div class="sl">Apollo Quota</div>
+              <div class="sv">50</div>
+              <div class="ss">remaining this month</div>
+            </div>
+          </div>
+          <div class="g2">
+            <div class="card">
+              <div class="ch"><span class="ct">Outreach Pipeline</span><span class="tag tg" id="ptag">Idle</span></div>
+              <div class="cb">
+                <div class="pipe mb12">
+                  <div class="pn" id="pn-scout"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg></span><span class="pnm">Scout</span><span class="pst" id="ps-scout">Idle</span></div>
+                  <div class="parr">→</div>
+                  <div class="pn" id="pn-enricher"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                      </svg></span><span class="pnm">Enricher</span><span class="pst" id="ps-enricher">Idle</span></div>
+                  <div class="parr">→</div>
+                  <div class="pn" id="pn-drafter"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg></span><span class="pnm">Drafter</span><span class="pst" id="ps-drafter">Idle</span></div>
+                  <div class="parr">→</div>
+                  <div class="pn" id="pn-sheets"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="3" y1="15" x2="21" y2="15"></line>
+                        <line x1="9" y1="3" x2="9" y2="21"></line>
+                        <line x1="15" y1="3" x2="15" y2="21"></line>
+                      </svg></span><span class="pnm">Sheets</span><span class="pst" id="ps-sheets">Idle</span></div>
+                </div>
+                <div class="prog">
+                  <div class="pf" id="pbar" style="width:0%"></div>
+                </div>
+                <div class="row gap6 mt12">
+                  <button class="btn btn-p btn-sm" onclick="runPipe()">Run All</button>
+                  <button class="btn btn-s btn-sm" onclick="runAgent('scout')">Scout Only</button>
+                  <button class="btn btn-s btn-sm" onclick="runAgent('drafter')">Redraft</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch"><span class="ct">Live Activity</span></div>
+              <div class="term" id="dashLog">
+                <div class="lg"><span class="lt">--:--:--</span><span class="li">Waiting…</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="g2 mt12">
+            <div class="card">
+              <div class="ch"><span class="ct">Dev Team — Complyze</span><span class="badge bpurp">4 agents</span></div>
+              <div style="padding:0">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Agent</th>
+                      <th>Status</th>
+                      <th>Last Task</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="devSum"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch"><span class="ct">Gateway & APIs</span></div>
+              <div class="cb">
+                <div class="cwr" id="cwrRow">
+                  <div class="gwdot chk" id="cwrDot"></div><span id="cwrTxt">Checking…</span>
+                </div>
+                <div class="apirow">
+                  <div>
+                    <div class="aname">OpenClaw Gateway</div>
+                    <div class="asub mono" style="font-size:10px" id="gwUrl2">127.0.0.1:18789</div>
+                  </div><span class="badge boff" id="gwBadge">Offline</span>
+                </div>
+                <div class="apirow">
+                  <div>
+                    <div class="aname">Anthropic</div>
+                    <div class="asub" id="antS">Not configured</div>
+                  </div><span class="badge boff" id="antB">—</span>
+                </div>
+                <div class="apirow">
+                  <div>
+                    <div class="aname">Apollo.io</div>
+                    <div class="asub" id="apolS">Not configured</div>
+                  </div><span class="badge boff" id="apolB">—</span>
+                </div>
+                <div class="apirow">
+                  <div>
+                    <div class="aname">Exa.ai</div>
+                    <div class="asub" id="exaS">Not configured</div>
+                  </div><span class="badge boff" id="exaB">—</span>
+                </div>
+                <button class="btn btn-s btn-sm mt12" onclick="checkGW()">Test Connection</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTREACH PIPELINE -->
+        <div id="pg-out-pipe" class="page">
+          <div class="card mb12">
+            <div class="ch"><span class="ct">Outreach Pipeline</span></div>
+            <div class="cb">
+              <div class="pipe mb12">
+                <div class="pn" onclick="openAM('scout')"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg></span><span class="pnm">Scout</span><span class="pst">Click to edit</span></div>
+                <div class="parr">→</div>
+                <div class="pn" onclick="openAM('enricher')"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg></span><span class="pnm">Enricher</span><span class="pst">Click to edit</span></div>
+                <div class="parr">→</div>
+                <div class="pn" onclick="openAM('drafter')"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg></span><span class="pnm">Drafter</span><span class="pst">Click to edit</span></div>
+                <div class="parr">→</div>
+                <div class="pn" onclick="openAM('sheets')"><span class="pi"><svg class="svg-icon" viewBox="0 0 24 24">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="3" y1="9" x2="21" y2="9"></line>
+                      <line x1="3" y1="15" x2="21" y2="15"></line>
+                      <line x1="9" y1="3" x2="9" y2="21"></line>
+                      <line x1="15" y1="3" x2="15" y2="21"></line>
+                    </svg></span><span class="pnm">SheetsBot</span><span class="pst">Click to edit</span></div>
+              </div>
+              <div class="row gap6">
+                <button class="btn btn-p btn-sm" onclick="runPipe()">▶ Run Full Pipeline</button>
+                <button class="btn btn-s btn-sm" onclick="runAgent('scout')">Scout Only</button>
+                <button class="btn btn-s btn-sm" onclick="runAgent('enricher')">Enrich Only</button>
+                <button class="btn btn-s btn-sm" onclick="runAgent('drafter')">Redraft Emails</button>
+                <button class="btn btn-s btn-sm" onclick="runAgent('sheets')">Push to Sheet</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Pipeline Log</span></div>
+            <div class="term full" id="pipeLog">
+              <div class="lg"><span class="lt">--:--:--</span><span class="li">No runs yet.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OUTREACH AGENTS -->
+        <div id="pg-out-agents" class="page">
+          <div class="sec-hd">
+            <div class="row gap6"><span class="sec-t">Outreach Team</span><span class="badge bblue">4 agents</span>
+            </div>
+            <button class="btn btn-p btn-sm" onclick="go('create-agent')">+ New Agent</button>
+          </div>
+          <div class="ag-grid" id="outGrid"></div>
+        </div>
+
+        <!-- LEADS -->
+        <div id="pg-leads" class="page">
+          <div class="sec-hd">
+            <span class="sec-t">Lead Sheet</span>
+            <div class="row gap6">
+              <button class="btn btn-s btn-sm" onclick="openSheet()">↗ Open Google Sheets</button>
+              <button class="btn btn-p btn-sm" onclick="runAgent('sheets')">Sync Now</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Drafted Leads</span><span class="tag tg" id="leadTag">0 leads</span></div>
+            <div class="tw">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>Industry</th>
+                    <th>Score</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="leadsB">
+                  <tr>
+                    <td colspan="7">
+                      <div class="empty">No leads yet. Run the pipeline.</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEV AGENTS -->
+        <div id="pg-dev-agents" class="page">
+          <div class="sec-hd">
+            <div class="row gap6"><span class="sec-t">Dev Team — Complyze</span><span class="badge bpurp">4
+                agents</span></div>
+            <button class="btn btn-p btn-sm" onclick="go('create-agent')">+ New Agent</button>
+          </div>
+          <div class="ag-grid" id="devGrid"></div>
+        </div>
+
+        <!-- DEV RUNNER -->
+        <div id="pg-dev-runner" class="page">
+          <div class="card mb12">
+            <div class="ch"><span class="ct">Dev Command Runner</span></div>
+            <div class="cb">
+              <div class="fr"><label class="fl">Target Agent</label>
+                <select class="fsel" id="devAg">
+                  <option value="complyze-qa">🧪 QA Agent</option>
+                  <option value="complyze-coder">🔧 Coder Agent</option>
+                  <option value="complyze-deployer">🚀 Deployer Agent</option>
+                  <option value="complyze-security">🔐 Security Agent</option>
+                </select>
+              </div>
+              <div class="fr"><label class="fl">Command / Task</label>
+                <textarea class="fta" id="devCmd"
+                  placeholder="e.g. Run full test suite for browser→desktop config&#10;e.g. Fix the URL scheme handler bug from QA-001&#10;e.g. Build and sign v1.0.2 — QA approved"></textarea>
+              </div>
+              <button class="btn btn-p" onclick="sendDevCmd()">▶ Send Command</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><span class="ct">Output</span></div>
+            <div class="term full" id="devLog">
+              <div class="lg"><span class="lsy">Dev runner ready.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CREATE AGENT -->
+        <div id="pg-create-agent" class="page">
+          <div class="card" style="max-width:560px">
+            <div class="ch"><span class="ct">Create New Agent</span></div>
+            <div class="cb">
+              <div class="fr2 mb12">
+                <div class="fr" style="margin-bottom:0"><label class="fl">Agent ID</label><input class="fi mono"
+                    id="na-id" placeholder="my-agent" /></div>
+                <div class="fr" style="margin-bottom:0"><label class="fl">Icon Type</label>
+                  <select class="fsel" id="na-icon">
+                    <option value="search">Search</option>
+                    <option value="zap">Enrich</option>
+                    <option value="pen">Draft</option>
+                    <option value="table">Data/Sheet</option>
+                    <option value="flask">Testing</option>
+                    <option value="code">Code</option>
+                    <option value="rocket">Deploy</option>
+                    <option value="shield">Security</option>
+                    <option value="bot">Generic Bot</option>
+                  </select>
+                </div>
+              </div>
+              <div class="fr"><label class="fl">Display Name</label><input class="fi" id="na-name"
+                  placeholder="My Agent" /></div>
+              <div class="fr"><label class="fl">Role / Description</label><input class="fi" id="na-role"
+                  placeholder="What does this agent do?" /></div>
+              <div class="fr"><label class="fl">Team</label><select class="fsel" id="na-team">
+                  <option value="outreach">Outreach Team</option>
+                  <option value="dev">Dev Team</option>
+                </select></div>
+              <div class="fr"><label class="fl">SOUL.md — Personality</label><textarea class="fta" id="na-soul"
+                  placeholder="You are a…" style="min-height:100px"></textarea></div>
+              <div class="fr"><label class="fl">AGENTS.md — Instructions</label><textarea class="fta" id="na-instr"
+                  placeholder="## Mission&#10;…" style="min-height:120px"></textarea></div>
+              <div class="fr"><label class="fl">HEARTBEAT.md <span
+                    style="color:var(--t3)">(optional)</span></label><textarea class="fta" id="na-hb"
+                  placeholder="## Weekly&#10;- [ ] …" style="min-height:60px"></textarea></div>
+              <div class="row gap6"><button class="btn btn-p" onclick="createAgent()">Create Agent</button><button
+                  class="btn btn-s" onclick="go('out-agents')">Cancel</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGS -->
+        <div id="pg-logs" class="page">
+          <div class="card">
+            <div class="ch"><span class="ct">Activity Log</span><button class="btn btn-g btn-sm"
+                onclick="clearLogs()">Clear</button></div>
+            <div class="term full" style="max-height:560px" id="fullLog">
+              <div class="lg"><span class="li">No activity.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="pg-settings" class="page">
+          <div style="max-width:560px">
+            <div class="card mb12">
+              <div class="ch"><span class="ct">API Keys</span></div>
+              <div class="cb">
+                <div class="fr"><label class="fl">Anthropic API Key</label><input class="fi mono" type="password"
+                    id="s-ant" placeholder="sk-ant-…" />
+                  <div class="fhint">Used by Drafter for email generation</div>
+                </div>
+                <div class="fr"><label class="fl">Apollo.io API Key</label><input class="fi mono" type="password"
+                    id="s-apol" placeholder="Apollo key…" />
+                  <div class="fhint">Free tier — 50 exports/month</div>
+                </div>
+                <div class="fr"><label class="fl">Exa.ai API Key</label><input class="fi mono" type="password"
+                    id="s-exa" placeholder="Exa key…" />
+                  <div class="fhint">Free tier — 1,000 searches/month</div>
+                </div>
+                <div class="fr"><label class="fl">Google Sheet URL</label><input class="fi" id="s-sheet"
+                    placeholder="https://docs.google.com/spreadsheets/d/…" /></div>
+                <button class="btn btn-p" onclick="saveSettings()">Save API Keys</button>
+              </div>
+            </div>
+            <div class="card mb12">
+              <div class="ch"><span class="ct">OpenClaw Gateway</span></div>
+              <div class="cb">
+                <div class="fr"><label class="fl">Gateway URL</label><input class="fi mono" id="s-gw"
+                    value="http://127.0.0.1:18789" />
+                  <div class="fhint">Default: local. Change if running on a VPS.</div>
+                </div>
+                <div class="fr"><label class="fl">Gateway Token</label><input class="fi mono" type="password" id="s-gwt"
+                    value="93df38fbaf9cd77d8af5a69d3bde6adf76cca094c0bc40f4" />
+                  <div class="fhint">Found in ~/.openclaw/openclaw.json</div>
+                </div>
+                <div class="row gap6"><button class="btn btn-p" onclick="saveSettings()">Save</button><button
+                    class="btn btn-s" onclick="checkGW()">Test Connection</button></div>
+              </div>
+            </div>
+            <div class="card mb12">
+              <div class="ch"><span class="ct">Pipeline Schedule</span></div>
+              <div class="cb">
+                <div class="srow">
+                  <div>
+                    <div class="srlbl">Auto-run weekly</div>
+                    <div class="srdesc">Runs Scout → Sheets every Monday 8am via HEARTBEAT</div>
+                  </div><label class="tog"><input type="checkbox" id="tog-w" /><span class="ts2"></span></label>
+                </div>
+                <div class="srow">
+                  <div>
+                    <div class="srlbl">Telegram notifications</div>
+                    <div class="srdesc">Notify when sheet is ready for review</div>
+                  </div><label class="tog"><input type="checkbox" id="tog-t" checked /><span class="ts2"></span></label>
+                </div>
+                <div class="srow">
+                  <div>
+                    <div class="srlbl">Deduplicate leads</div>
+                    <div class="srdesc">Skip contacts already in seen.csv</div>
+                  </div><label class="tog"><input type="checkbox" id="tog-d" checked /><span class="ts2"></span></label>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch"><span class="ct">ICP Configuration</span></div>
+              <div class="cb">
+                <div class="fr"><label class="fl">Target Titles</label><textarea class="fta" id="s-titles"
+                    style="min-height:60px">Chief Compliance Officer, VP of Compliance, Director of Compliance, Chief Risk Officer, CISO, Head of AI, Director of GRC</textarea>
+                </div>
+                <div class="fr"><label class="fl">Target Industries</label><textarea class="fta" id="s-industries"
+                    style="min-height:50px">Financial Services, Banking, Insurance, Healthcare, Legal Services, Fintech</textarea>
+                </div>
+                <div class="fr"><label class="fl">Company Size</label>
+                  <div class="row gap6"><input class="fi" id="s-min" value="100" style="max-width:74px" /><span
+                      style="color:var(--t3);font-size:11.5px">to</span><input class="fi" id="s-max" value="1000"
+                      style="max-width:74px" /><span style="color:var(--t3);font-size:11.5px">employees</span></div>
+                </div>
+                <button class="btn btn-p" onclick="saveSettings()">Save ICP Config</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TELEGRAM -->
+        <div id="pg-telegram" class="page">
+          <div style="max-width:520px">
+            <div class="card mb12">
+              <div class="ch"><span class="ct">Offline Message</span></div>
+              <div class="cb">
+                <p style="font-size:12px;color:var(--t2);margin-bottom:12px">Sent when OpenClaw is offline instead of a
+                  confusing error.</p>
+                <div class="fr"><label class="fl">Message</label><textarea class="fta" id="tg-off"
+                    style="min-height:75px" oninput="prevTg()">Your agents are offline and asleep.
 
 Start the gateway to wake them:
 openclaw gateway</textarea></div>
-          <div class="fhint mb12">Preview:</div>
-          <div class="tgbg mb12"><div class="tgbub"><div class="tgfrom">CompCommand</div><div class="tgtxt" id="tgPrev">Your agents are offline and asleep.
+                <div class="fhint mb12">Preview:</div>
+                <div class="tgbg mb12">
+                  <div class="tgbub">
+                    <div class="tgfrom">CompCommand</div>
+                    <div class="tgtxt" id="tgPrev">Your agents are offline and asleep.
 
-Start the gateway to wake them:
-openclaw gateway</div></div></div>
-          <button class="btn btn-p btn-sm" onclick="saveTgMsg()">Save Message</button>
+                      Start the gateway to wake them:
+                      openclaw gateway</div>
+                  </div>
+                </div>
+                <button class="btn btn-p btn-sm" onclick="saveTgMsg()">Save Message</button>
+              </div>
+            </div>
+            <div class="card mb12">
+              <div class="ch"><span class="ct">Bot Setup</span></div>
+              <div class="cb">
+                <div class="fr"><label class="fl">Telegram Bot Token</label><input class="fi mono" type="password"
+                    id="tg-tok" placeholder="123456:ABC…" /></div>
+                <div class="row gap6"><button class="btn btn-p btn-sm" onclick="saveTgSet()">Save</button><button
+                    class="btn btn-s btn-sm" onclick="testTg()">Send Test</button></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch"><span class="ct">Command Reference</span></div>
+              <div style="padding:0">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Say this in Telegram</th>
+                      <th>Does this</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">Run pipeline</td>
+                      <td style="color:var(--t2);font-size:11.5px">Full Scout → Sheets run</td>
+                    </tr>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">@scout Run lead discovery</td>
+                      <td style="color:var(--t2);font-size:11.5px">Find new leads only</td>
+                    </tr>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">@drafter Redraft emails</td>
+                      <td style="color:var(--t2);font-size:11.5px">Rewrite all pending drafts</td>
+                    </tr>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">@sheets Sheet link</td>
+                      <td style="color:var(--t2);font-size:11.5px">Returns Google Sheet URL</td>
+                    </tr>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">@complyze-qa Run tests</td>
+                      <td style="color:var(--t2);font-size:11.5px">Full QA run on Complyze app</td>
+                    </tr>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">@complyze-coder Fix QA-001</td>
+                      <td style="color:var(--t2);font-size:11.5px">Coder picks up bug fix</td>
+                    </tr>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">@complyze-deployer Build v1.0.2</td>
+                      <td style="color:var(--t2);font-size:11.5px">Sign and package release</td>
+                    </tr>
+                    <tr>
+                      <td class="mono" style="font-size:10.5px">How many leads this week?</td>
+                      <td style="color:var(--t2);font-size:11.5px">Pipeline summary</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </main>
+  </div>
+
+  <!-- Agent Edit Modal -->
+  <div class="ov" id="agMod">
+    <div class="modal wide">
+      <div class="mh"><span class="mt" id="amTitle">Edit Agent</span><button class="mx"
+          onclick="cMod('agMod')">×</button></div>
+      <div class="mb">
+        <div class="tabs">
+          <button class="tb on" onclick="stab('soul')">SOUL.md</button>
+          <button class="tb" onclick="stab('instr')">AGENTS.md</button>
+          <button class="tb" onclick="stab('hb')">HEARTBEAT.md</button>
+          <button class="tb" onclick="stab('info')">Info</button>
+        </div>
+        <div id="et-soul">
+          <div class="fr"><label class="fl">Personality, voice, core behavior</label><textarea class="fta" id="e-soul"
+              style="min-height:210px"></textarea></div>
+        </div>
+        <div id="et-instr" style="display:none">
+          <div class="fr"><label class="fl">Mission, workflow, rules, output formats</label><textarea class="fta"
+              id="e-instr" style="min-height:210px"></textarea></div>
+        </div>
+        <div id="et-hb" style="display:none">
+          <div class="fr"><label class="fl">Scheduled recurring tasks</label><textarea class="fta" id="e-hb"
+              style="min-height:210px"></textarea></div>
+        </div>
+        <div id="et-info" style="display:none">
+          <div class="fr2 mb12">
+            <div class="fr" style="margin-bottom:0"><label class="fl">Display Name</label><input class="fi"
+                id="e-name" /></div>
+            <div class="fr" style="margin-bottom:0"><label class="fl">Icon Type</label>
+              <select class="fsel" id="e-icon">
+                <option value="search">Search</option>
+                <option value="zap">Enrich</option>
+                <option value="pen">Draft</option>
+                <option value="table">Data/Sheet</option>
+                <option value="flask">Testing</option>
+                <option value="code">Code</option>
+                <option value="rocket">Deploy</option>
+                <option value="shield">Security</option>
+                <option value="bot">Generic Bot</option>
+              </select>
+            </div>
+          </div>
+          <div class="fr"><label class="fl">Role</label><input class="fi" id="e-role" /></div>
+          <div class="fr"><label class="fl">Team</label><select class="fsel" id="e-team">
+              <option value="outreach">Outreach</option>
+              <option value="dev">Dev</option>
+            </select></div>
+          <div class="fr"><label class="fl">Workspace Path</label><input class="fi mono" id="e-ws"
+              placeholder="~/.openclaw/workspace-id" />
+            <div class="fhint">Saved to OpenClaw on your machine when you click Save</div>
+          </div>
         </div>
       </div>
-      <div class="card mb12">
-        <div class="ch"><span class="ct">Bot Setup</span></div>
-        <div class="cb">
-          <div class="fr"><label class="fl">Telegram Bot Token</label><input class="fi mono" type="password" id="tg-tok" placeholder="123456:ABC…" /></div>
-          <div class="row gap6"><button class="btn btn-p btn-sm" onclick="saveTgSet()">Save</button><button class="btn btn-s btn-sm" onclick="testTg()">Send Test</button></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><span class="ct">Command Reference</span></div>
-        <div style="padding:0"><table><thead><tr><th>Say this in Telegram</th><th>Does this</th></tr></thead><tbody>
-          <tr><td class="mono" style="font-size:10.5px">Run pipeline</td><td style="color:var(--t2);font-size:11.5px">Full Scout → Sheets run</td></tr>
-          <tr><td class="mono" style="font-size:10.5px">@scout Run lead discovery</td><td style="color:var(--t2);font-size:11.5px">Find new leads only</td></tr>
-          <tr><td class="mono" style="font-size:10.5px">@drafter Redraft emails</td><td style="color:var(--t2);font-size:11.5px">Rewrite all pending drafts</td></tr>
-          <tr><td class="mono" style="font-size:10.5px">@sheets Sheet link</td><td style="color:var(--t2);font-size:11.5px">Returns Google Sheet URL</td></tr>
-          <tr><td class="mono" style="font-size:10.5px">@complyze-qa Run tests</td><td style="color:var(--t2);font-size:11.5px">Full QA run on Complyze app</td></tr>
-          <tr><td class="mono" style="font-size:10.5px">@complyze-coder Fix QA-001</td><td style="color:var(--t2);font-size:11.5px">Coder picks up bug fix</td></tr>
-          <tr><td class="mono" style="font-size:10.5px">@complyze-deployer Build v1.0.2</td><td style="color:var(--t2);font-size:11.5px">Sign and package release</td></tr>
-          <tr><td class="mono" style="font-size:10.5px">How many leads this week?</td><td style="color:var(--t2);font-size:11.5px">Pipeline summary</td></tr>
-        </tbody></table></div>
+      <div class="mf"><button class="btn btn-d btn-sm" onclick="delAgent()">Delete</button>
+        <div style="flex:1"></div><button class="btn btn-g btn-sm" onclick="cMod('agMod')">Cancel</button><button
+          class="btn btn-s btn-sm" onclick="testAgentModal()">Test</button><button class="btn btn-p btn-sm"
+          onclick="saveAgent()">Save Changes</button>
       </div>
     </div>
   </div>
 
-  </div><!-- /content -->
-</main>
-</div>
-
-<!-- Agent Edit Modal -->
-<div class="ov" id="agMod">
-  <div class="modal wide">
-    <div class="mh"><span class="mt" id="amTitle">Edit Agent</span><button class="mx" onclick="cMod('agMod')">×</button></div>
-    <div class="mb">
-      <div class="tabs">
-        <button class="tb on" onclick="stab('soul')">SOUL.md</button>
-        <button class="tb" onclick="stab('instr')">AGENTS.md</button>
-        <button class="tb" onclick="stab('hb')">HEARTBEAT.md</button>
-        <button class="tb" onclick="stab('info')">Info</button>
-      </div>
-      <div id="et-soul"><div class="fr"><label class="fl">Personality, voice, core behavior</label><textarea class="fta" id="e-soul" style="min-height:210px"></textarea></div></div>
-      <div id="et-instr" style="display:none"><div class="fr"><label class="fl">Mission, workflow, rules, output formats</label><textarea class="fta" id="e-instr" style="min-height:210px"></textarea></div></div>
-      <div id="et-hb" style="display:none"><div class="fr"><label class="fl">Scheduled recurring tasks</label><textarea class="fta" id="e-hb" style="min-height:210px"></textarea></div></div>
-      <div id="et-info" style="display:none">
-        <div class="fr2 mb12">
-          <div class="fr" style="margin-bottom:0"><label class="fl">Display Name</label><input class="fi" id="e-name"/></div>
-          <div class="fr" style="margin-bottom:0"><label class="fl">Emoji</label><input class="fi" id="e-emoji" style="max-width:66px"/></div>
+  <!-- Test Modal -->
+  <div class="ov" id="testMod">
+    <div class="modal">
+      <div class="mh"><span class="mt" id="testTitle">Test Agent</span><button class="mx"
+          onclick="cMod('testMod')">×</button></div>
+      <div class="mb">
+        <div class="fr"><label class="fl">Prompt</label><input class="fi" id="testPrompt"
+            placeholder="What is your mission?" /></div>
+        <button class="btn btn-p btn-sm mb12" onclick="runTest()">Send</button>
+        <div class="term" id="testOut" style="min-height:100px">
+          <div class="lg"><span class="lsy">Enter a prompt and click Send.</span></div>
         </div>
-        <div class="fr"><label class="fl">Role</label><input class="fi" id="e-role"/></div>
-        <div class="fr"><label class="fl">Team</label><select class="fsel" id="e-team"><option value="outreach">Outreach</option><option value="dev">Dev</option></select></div>
-        <div class="fr"><label class="fl">Workspace Path</label><input class="fi mono" id="e-ws" placeholder="~/.openclaw/workspace-id"/><div class="fhint">Saved to OpenClaw on your machine when you click Save</div></div>
       </div>
+      <div class="mf"><button class="btn btn-s btn-sm" onclick="cMod('testMod')">Close</button></div>
     </div>
-    <div class="mf"><button class="btn btn-d btn-sm" onclick="delAgent()">Delete</button><div style="flex:1"></div><button class="btn btn-g btn-sm" onclick="cMod('agMod')">Cancel</button><button class="btn btn-s btn-sm" onclick="testAgentModal()">Test</button><button class="btn btn-p btn-sm" onclick="saveAgent()">Save Changes</button></div>
   </div>
-</div>
 
-<!-- Test Modal -->
-<div class="ov" id="testMod">
-  <div class="modal">
-    <div class="mh"><span class="mt" id="testTitle">Test Agent</span><button class="mx" onclick="cMod('testMod')">×</button></div>
-    <div class="mb">
-      <div class="fr"><label class="fl">Prompt</label><input class="fi" id="testPrompt" placeholder="What is your mission?" /></div>
-      <button class="btn btn-p btn-sm mb12" onclick="runTest()">Send</button>
-      <div class="term" id="testOut" style="min-height:100px"><div class="lg"><span class="lsy">Enter a prompt and click Send.</span></div></div>
-    </div>
-    <div class="mf"><button class="btn btn-s btn-sm" onclick="cMod('testMod')">Close</button></div>
-  </div>
-</div>
+  <script>
+    // ════ State ════
+    const Icons = {
+      search: `<svg class="svg-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
+      zap: `<svg class="svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
+      pen: `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`,
+      table: `<svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>`,
+      flask: `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M9 3h6"></path><path d="M10 3v10.46l-4 6.54c-.5.8.5 2 1.5 2h9c1 0 2-1.2 1.5-2l-4-6.54V3"></path></svg>`,
+      code: `<svg class="svg-icon" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`,
+      rocket: `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>`,
+      shield: `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`,
+      bot: `<svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>`
+    };
 
-<script>
-// ════ State ════
-const S={
-  cur:null, gwOn:false, running:false, leads:[], logs:[],
-  agents:[
-    {id:'scout',name:'Scout',emoji:'🔍',role:'Lead discovery from Apollo.io',team:'outreach',status:'offline',lastRun:'Never',
-     soul:`You are a precise, tireless lead researcher. Quality over quantity — 30 tight leads beats 50 loose ones.\n\nYou know that a "Director of Compliance" at a 500-person insurance company is worth 10× a "Head of AI" at a 50-person startup.\n\nDefaults:\n- Always check seen.csv before adding.\n- Log every run in memory/runs.md.\n- When in doubt about fit, skip.`,
-     instr:`# Scout — Lead Discovery\n\n## Mission\nFind compliance, risk, IT security, and AI leaders at 100–1,000 employee companies in financial services, healthcare, insurance, or legal industries.\n\n## Workflow\n1. Query Apollo.io free API with ICP criteria\n2. Filter: must have email, 100–1,000 employees, match titles/industries\n3. Deduplicate against leads/seen.csv\n4. Write to leads/raw_leads.json\n5. Create leads/ready.flag`,
-     hb:`# Scout Heartbeat\n\n## Weekly (Monday 8am)\n- [ ] Check raw_leads.json processed (stale >7d)\n- [ ] Run lead discovery if yes\n- [ ] Update memory/runs.md\n- [ ] Create ready.flag\n\n## Health\n- [ ] Verify Apollo API key\n- [ ] Alert if quota >40 used`},
+    const S = {
+      cur: null, gwOn: false, running: false, leads: [], logs: [],
+      agents: [
+        {
+          id: 'scout', name: 'Scout', icon: 'search', role: 'Lead discovery from Apollo.io', team: 'outreach', status: 'offline', lastRun: 'Never',
+          soul: `You are a precise, tireless lead researcher. Quality over quantity — 30 tight leads beats 50 loose ones.\n\nYou know that a "Director of Compliance" at a 500-person insurance company is worth 10× a "Head of AI" at a 50-person startup.\n\nDefaults:\n- Always check seen.csv before adding.\n- Log every run in memory/runs.md.\n- When in doubt about fit, skip.`,
+          instr: `# Scout — Lead Discovery\n\n## Mission\nFind compliance, risk, IT security, and AI leaders at 100–1,000 employee companies in financial services, healthcare, insurance, or legal industries.\n\n## Workflow\n1. Query Apollo.io free API with ICP criteria\n2. Filter: must have email, 100–1,000 employees, match titles/industries\n3. Deduplicate against leads/seen.csv\n4. Write to leads/raw_leads.json\n5. Create leads/ready.flag`,
+          hb: `# Scout Heartbeat\n\n## Weekly (Monday 8am)\n- [ ] Check raw_leads.json processed (stale >7d)\n- [ ] Run lead discovery if yes\n- [ ] Update memory/runs.md\n- [ ] Create ready.flag\n\n## Health\n- [ ] Verify Apollo API key\n- [ ] Alert if quota >40 used`
+        },
 
-    {id:'enricher',name:'Enricher',emoji:'🔎',role:'Lead context via Exa.ai',team:'outreach',status:'offline',lastRun:'Never',
-     soul:`You find the detail that makes someone feel seen. Three targeted searches per person — company AI news, person activity, industry regulatory climate.\n\nYou are the bridge between a name and a person.`,
-     instr:`# Enricher\n\n## Workflow\n1. Watch for leads/ready.flag\n2. Read raw_leads.json\n3. 3 Exa.ai searches per lead\n4. Score 1–10, pass ≥6 to Drafter\n5. Write enriched_leads.json, create enriched.flag`,hb:''},
+        {
+          id: 'enricher', name: 'Enricher', icon: 'zap', role: 'Lead context via Exa.ai', team: 'outreach', status: 'offline', lastRun: 'Never',
+          soul: `You find the detail that makes someone feel seen. Three targeted searches per person — company AI news, person activity, industry regulatory climate.\n\nYou are the bridge between a name and a person.`,
+          instr: `# Enricher\n\n## Workflow\n1. Watch for leads/ready.flag\n2. Read raw_leads.json\n3. 3 Exa.ai searches per lead\n4. Score 1–10, pass ≥6 to Drafter\n5. Write enriched_leads.json, create enriched.flag`, hb: ''
+        },
 
-    {id:'drafter',name:'Drafter',emoji:'✍️',role:'Email writer via Claude Haiku',team:'outreach',status:'offline',lastRun:'Never',
-     soul:`You write emails that get replies. Specificity is everything.\n\nYou are Darius's voice. 20 years in regulated-industry AI. Short. Specific. Human. Low-pressure ask.\n\nIf you write "I wanted to reach out" — delete the paragraph.`,
-     instr:`# Drafter\n\n## Rules\n- Reference something specific and real\n- Under 150 words total\n- No buzzwords\n- End with 20-min call ask\n- Sign as: Darius`,hb:''},
+        {
+          id: 'drafter', name: 'Drafter', icon: 'pen', role: 'Email writer via Claude Haiku', team: 'outreach', status: 'offline', lastRun: 'Never',
+          soul: `You write emails that get replies. Specificity is everything.\n\nYou are Darius's voice. 20 years in regulated-industry AI. Short. Specific. Human. Low-pressure ask.\n\nIf you write "I wanted to reach out" — delete the paragraph.`,
+          instr: `# Drafter\n\n## Rules\n- Reference something specific and real\n- Under 150 words total\n- No buzzwords\n- End with 20-min call ask\n- Sign as: Darius`, hb: ''
+        },
 
-    {id:'sheets',name:'SheetsBot',emoji:'📊',role:'Populates Google Sheet for review',team:'outreach',status:'offline',lastRun:'Never',
-     soul:`You are the last gate before anything reaches Darius. Precise and obsessive about formatting.\n\nYour job is done when Darius gets a Telegram link and sees exactly what he needs.`,
-     instr:`# SheetsBot\n\n## Columns\nDate, First, Last, Title, Company, Industry, Size, Email, LinkedIn, Fit Score, Why Fit, Hook, Subject, Body, Status (dropdown), Notes, Sent Date\n\n## Rules\n- Append only, never overwrite\n- Dedup by email\n- Notify Darius via Telegram`,hb:''},
+        {
+          id: 'sheets', name: 'SheetsBot', icon: 'table', role: 'Populates Google Sheet for review', team: 'outreach', status: 'offline', lastRun: 'Never',
+          soul: `You are the last gate before anything reaches Darius. Precise and obsessive about formatting.\n\nYour job is done when Darius gets a Telegram link and sees exactly what he needs.`,
+          instr: `# SheetsBot\n\n## Columns\nDate, First, Last, Title, Company, Industry, Size, Email, LinkedIn, Fit Score, Why Fit, Hook, Subject, Body, Status (dropdown), Notes, Sent Date\n\n## Rules\n- Append only, never overwrite\n- Dedup by email\n- Notify Darius via Telegram`, hb: ''
+        },
 
-    {id:'complyze-qa',name:'QA Agent',emoji:'🧪',role:'Tests Complyze — browser→desktop config',team:'dev',status:'offline',lastRun:'Never',
-     soul:`You are an elite QA engineer. Every bug report has steps, expected behavior, actual behavior, and severity.\n\nBug ID format: QA-YYYY-MM-DD-NNN. Zero tolerance for "works on my machine."`,
-     instr:`# QA Agent\n\n## Primary Tests\n1. Browser extension → desktop config flow\n2. Five-prompt AI pipeline end-to-end\n3. Risk scoring accuracy\n4. Policy enforcement thresholds\n5. Auth and session management\n\n## Workflow\nRun tests → file reports → send to complyze-coder via sessions_send`,
-     hb:`# QA Heartbeat\n\n## Daily\n- [ ] Smoke test suite\n- [ ] Check open bugs >48hrs\n- [ ] Verify last deployment stable\n\n## Weekly\n- [ ] Full regression suite`},
+        {
+          id: 'complyze-qa', name: 'QA Agent', icon: 'flask', role: 'Tests Complyze — browser→desktop config', team: 'dev', status: 'offline', lastRun: 'Never',
+          soul: `You are an elite QA engineer. Every bug report has steps, expected behavior, actual behavior, and severity.\n\nBug ID format: QA-YYYY-MM-DD-NNN. Zero tolerance for "works on my machine."`,
+          instr: `# QA Agent\n\n## Primary Tests\n1. Browser extension → desktop config flow\n2. Five-prompt AI pipeline end-to-end\n3. Risk scoring accuracy\n4. Policy enforcement thresholds\n5. Auth and session management\n\n## Workflow\nRun tests → file reports → send to complyze-coder via sessions_send`,
+          hb: `# QA Heartbeat\n\n## Daily\n- [ ] Smoke test suite\n- [ ] Check open bugs >48hrs\n- [ ] Verify last deployment stable\n\n## Weekly\n- [ ] Full regression suite`
+        },
 
-    {id:'complyze-coder',name:'Coder Agent',emoji:'🔧',role:'Fixes bugs and builds Complyze features',team:'dev',status:'offline',lastRun:'Never',
-     soul:`You are a principal engineer. When QA files a bug, you reproduce it first. Then fix it. Then write a test.\n\nConventional commits. Feature branches. No force pushes to main.`,
-     instr:`# Coder Agent\n\n## Workflow\n1. Receive bug from QA (sessions_send)\n2. Reproduce\n3. Fix on feature branch\n4. Add regression test\n5. Send back to QA\n6. After QA approval: merge, notify Deployer\n\n## Stack\nElectron, Chrome extension, Node.js proxy, Python risk engine`,hb:''},
+        {
+          id: 'complyze-coder', name: 'Coder Agent', icon: 'code', role: 'Fixes bugs and builds Complyze features', team: 'dev', status: 'offline', lastRun: 'Never',
+          soul: `You are a principal engineer. When QA files a bug, you reproduce it first. Then fix it. Then write a test.\n\nConventional commits. Feature branches. No force pushes to main.`,
+          instr: `# Coder Agent\n\n## Workflow\n1. Receive bug from QA (sessions_send)\n2. Reproduce\n3. Fix on feature branch\n4. Add regression test\n5. Send back to QA\n6. After QA approval: merge, notify Deployer\n\n## Stack\nElectron, Chrome extension, Node.js proxy, Python risk engine`, hb: ''
+        },
 
-    {id:'complyze-deployer',name:'Deployer',emoji:'🚀',role:'Builds, signs, deploys Complyze releases',team:'dev',status:'offline',lastRun:'Never',
-     soul:`You only deploy what QA has approved. Full stop.\n\nA broken release is worse than a delayed one. You own the version bump, release notes, and DMG.`,
-     instr:`# Deployer\n\n## Workflow\n1. QA-approved trigger from coder\n2. Bump version\n3. npm run build\n4. Code sign + notarize\n5. Package DMG\n6. Deploy\n7. Notify Darius via Telegram\n\n## Checklist\n- [ ] QA sign-off\n- [ ] Version bumped\n- [ ] Changelog updated\n- [ ] Cert valid`,hb:''},
+        {
+          id: 'complyze-deployer', name: 'Deployer', icon: 'rocket', role: 'Builds, signs, deploys Complyze releases', team: 'dev', status: 'offline', lastRun: 'Never',
+          soul: `You only deploy what QA has approved. Full stop.\n\nA broken release is worse than a delayed one. You own the version bump, release notes, and DMG.`,
+          instr: `# Deployer\n\n## Workflow\n1. QA-approved trigger from coder\n2. Bump version\n3. npm run build\n4. Code sign + notarize\n5. Package DMG\n6. Deploy\n7. Notify Darius via Telegram\n\n## Checklist\n- [ ] QA sign-off\n- [ ] Version bumped\n- [ ] Changelog updated\n- [ ] Cert valid`, hb: ''
+        },
 
-    {id:'complyze-security',name:'Security',emoji:'🔐',role:'Security audits and vulnerability scanning',team:'dev',status:'offline',lastRun:'Never',
-     soul:`You think like an attacker so users don't have to worry.\n\nHigh severity findings go to coder immediately. Everything gets documented.`,
-     instr:`# Security Agent\n\n## Focus Areas\n1. User data scoping\n2. API key exposure\n3. Auth token handling\n4. Extension permission boundaries\n5. LLM prompt injection\n\n## Severity: Critical / High / Medium / Low / Info`,
-     hb:`# Security Heartbeat\n\n## Weekly\n- [ ] npm audit + pip-audit\n- [ ] Review new commits\n- [ ] Check for exposed secrets\n- [ ] Review open findings`}
-  ]
-};
+        {
+          id: 'complyze-security', name: 'Security', icon: 'shield', role: 'Security audits and vulnerability scanning', team: 'dev', status: 'offline', lastRun: 'Never',
+          soul: `You think like an attacker so users don't have to worry.\n\nHigh severity findings go to coder immediately. Everything gets documented.`,
+          instr: `# Security Agent\n\n## Focus Areas\n1. User data scoping\n2. API key exposure\n3. Auth token handling\n4. Extension permission boundaries\n5. LLM prompt injection\n\n## Severity: Critical / High / Medium / Low / Info`,
+          hb: `# Security Heartbeat\n\n## Weekly\n- [ ] npm audit + pip-audit\n- [ ] Review new commits\n- [ ] Check for exposed secrets\n- [ ] Review open findings`
+        }
+      ]
+    };
 
-// ════ Navigation ════
-const pgMap={
-  dashboard:['Dashboard',''],
-  'out-pipe':['Pipeline','Outreach Team'],
-  'out-agents':['Agents','Outreach Team'],
-  leads:['Lead Sheet','Outreach Team'],
-  'dev-agents':['Agents','Dev Team'],
-  'dev-runner':['Runner','Dev Team'],
-  'create-agent':['Create Agent',''],
-  logs:['Activity Log',''],
-  settings:['Settings',''],
-  telegram:['Telegram','']
-};
+    // ════ Navigation ════
+    const pgMap = {
+      dashboard: ['Dashboard', ''],
+      'out-pipe': ['Pipeline', 'Outreach Team'],
+      'out-agents': ['Agents', 'Outreach Team'],
+      leads: ['Lead Sheet', 'Outreach Team'],
+      'dev-agents': ['Agents', 'Dev Team'],
+      'dev-runner': ['Runner', 'Dev Team'],
+      'create-agent': ['Create Agent', ''],
+      logs: ['Activity Log', ''],
+      settings: ['Settings', ''],
+      telegram: ['Telegram', '']
+    };
 
-function go(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  const el=document.getElementById('pg-'+id);
-  if(el)el.classList.add('active');
-  document.querySelectorAll('.nb[data-p]').forEach(b=>{if(b.dataset.p===id)b.classList.add('on')});
-  const[t,c]=pgMap[id]||[id,''];
-  document.getElementById('pgT').textContent=t;
-  document.getElementById('pgC').textContent=c?'· '+c:'';
-  if(id==='out-agents')renderGrid('outreach');
-  if(id==='dev-agents')renderGrid('dev');
-  if(id==='dashboard')renderDevSum();
-}
+    function go(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+      const el = document.getElementById('pg-' + id);
+      if (el) el.classList.add('active');
+      document.querySelectorAll('.nb[data-p]').forEach(b => { if (b.dataset.p === id) b.classList.add('on') });
+      const [t, c] = pgMap[id] || [id, ''];
+      document.getElementById('pgT').textContent = t;
+      document.getElementById('pgC').textContent = c ? '· ' + c : '';
+      if (id === 'out-agents') renderGrid('outreach');
+      if (id === 'dev-agents') renderGrid('dev');
+      if (id === 'dashboard') renderDevSum();
+    }
 
-document.querySelectorAll('.nb[data-p]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.p)));
 
-// ════ Gateway ════
-async function checkGW(){
-  const url=(document.getElementById('s-gw')||{}).value||'http://localhost:18789';
-  setGW('chk'); addLog('sys','Checking '+url+'…');
-  try{
-    const r=await fetch(url+'/health',{signal:AbortSignal.timeout(2500)});
-    if(r.ok){setGW('on','Online');addLog('ok','Gateway online');document.getElementById('offbar').classList.remove('show');}
-    else throw new Error('HTTP '+r.status);
-  }catch(e){setGW('off');addLog('w','Gateway offline — '+e.message);document.getElementById('offbar').classList.add('show');}
-}
+    // ════ Gateway ════
+    async function checkGW() {
+      setGW('chk');
+      try {
+        gwConnect();
+        // If already connected, just mark as online
+        if (_gwConnected) {
+          setGW('on', 'Online');
+          document.getElementById('offbar').classList.remove('show');
+        }
+        // Otherwise gwConnect's onmessage callback will call setGW('on') when handshake completes
+      } catch (e) {
+        setGW('off');
+        addLog('w', 'Gateway check failed — ' + e.message);
+        document.getElementById('offbar').classList.add('show');
+      }
+    }
 
-function setGW(s,lbl){
-  S.gwOn=s==='on';
-  const m={chk:{cls:'chk',txt:'Connecting…',bc:'boff',bt:'Checking'},on:{cls:'on',txt:lbl||'Online',bc:'bon',bt:'Online'},off:{cls:'',txt:'Agents offline',bc:'boff',bt:'Offline'}};
-  const d=m[s];
-  ['gwDot','cwrDot'].forEach(id=>{const e=document.getElementById(id);if(e){e.className='gwdot'+(d.cls?' '+d.cls:'');}});
-  const gt=document.getElementById('gwTxt');if(gt)gt.textContent=d.txt;
-  const ct=document.getElementById('cwrTxt');if(ct)ct.textContent=s==='on'?'Connected · '+((document.getElementById('s-gw')||{}).value||'localhost:18789'):'Not reachable';
-  const gb=document.getElementById('gwBadge');if(gb){gb.className='badge '+d.bc;gb.textContent=d.bt;}
-  const cr=document.getElementById('cwrRow');if(cr)cr.className='cwr'+(s==='on'?' on':'');
-  S.agents.forEach(a=>a.status=s==='on'?'online':'offline');
-  renderDevSum();
-}
+    function setGW(s, lbl) {
+      S.gwOn = s === 'on';
+      const m = { chk: { cls: 'chk', txt: 'Connecting…', bc: 'boff', bt: 'Checking' }, on: { cls: 'on', txt: lbl || 'Online', bc: 'bon', bt: 'Online' }, off: { cls: '', txt: 'Agents offline', bc: 'boff', bt: 'Offline' } };
+      const d = m[s];
+      ['gwDot', 'cwrDot'].forEach(id => { const e = document.getElementById(id); if (e) { e.className = 'gwdot' + (d.cls ? ' ' + d.cls : ''); } });
+      const gt = document.getElementById('gwTxt'); if (gt) gt.textContent = d.txt;
+      const ct = document.getElementById('cwrTxt'); if (ct) ct.textContent = s === 'on' ? 'Connected · ' + ((document.getElementById('s-gw') || {}).value || '127.0.0.1:18789') : 'Not reachable';
+      const gb = document.getElementById('gwBadge'); if (gb) { gb.className = 'badge ' + d.bc; gb.textContent = d.bt; }
+      const cr = document.getElementById('cwrRow'); if (cr) cr.className = 'cwr' + (s === 'on' ? ' on' : '');
+      S.agents.forEach(a => a.status = s === 'on' ? 'online' : 'offline');
+      renderDevSum();
+    }
 
-async function gwSend(agentId,msg){
-  const url=(document.getElementById('s-gw')||{}).value||'http://localhost:18789';
-  const r=await fetch(url+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({agentId,message:msg,channel:'webchat'}),signal:AbortSignal.timeout(30000)});
-  if(!r.ok)throw new Error('HTTP '+r.status);
-  const d=await r.json();return d.response||d.message||JSON.stringify(d);
-}
+    // ════ Gateway WebSocket RPC Client ════
+    let _gwWs = null;
+    let _gwPending = {};
+    let _gwConnected = false;
+    let _gwReqId = 0;
 
-async function gwSaveAgent(a){
-  const url=(document.getElementById('s-gw')||{}).value||'http://localhost:18789';
-  try{const r=await fetch(url+'/api/agents/'+a.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:a.name,emoji:a.emoji,soul:a.soul,instructions:a.instr,heartbeat:a.hb,workspace:'~/.openclaw/workspace-'+a.id}),signal:AbortSignal.timeout(5000)});return r.ok;}catch{return false;}
-}
+    function gwGetUrl() {
+      return (document.getElementById('s-gw') || {}).value || 'http://127.0.0.1:18789';
+    }
+    function gwGetToken() {
+      return (document.getElementById('s-gwt') || {}).value || '';
+    }
 
-async function gwCreateAgent(a){
-  const url=(document.getElementById('s-gw')||{}).value||'http://localhost:18789';
-  try{const r=await fetch(url+'/api/agents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:a.id,name:a.name,emoji:a.emoji,workspace:'~/.openclaw/workspace-'+a.id,soul:a.soul,instructions:a.instr,heartbeat:a.hb}),signal:AbortSignal.timeout(5000)});return r.ok;}catch{return false;}
-}
+    function gwConnect() {
+      if (_gwWs && (_gwWs.readyState === WebSocket.OPEN || _gwWs.readyState === WebSocket.CONNECTING)) return;
+      const url = gwGetUrl();
+      const tok = gwGetToken();
+      const wsUrl = url.replace(/^http/, 'ws') + (tok ? '?token=' + encodeURIComponent(tok) : '');
+      _gwWs = new WebSocket(wsUrl);
+      _gwWs.onopen = () => {
+        // Send connect handshake
+        const connectMsg = {
+          type: 'req', id: 'connect-' + Date.now(),
+          method: 'connect',
+          params: {
+            minProtocol: 3, maxProtocol: 3,
+            client: { id: 'compcommand', version: '1.0', platform: 'web', mode: 'webchat' },
+            role: 'operator', scopes: ['operator.admin'],
+            auth: tok ? { token: tok } : undefined,
+            userAgent: navigator.userAgent
+          }
+        };
+        _gwWs.send(JSON.stringify(connectMsg));
+      };
+      _gwWs.onmessage = (evt) => {
+        try {
+          const msg = JSON.parse(evt.data);
+          if (msg.type === 'res') {
+            const cb = _gwPending[msg.id];
+            if (cb) {
+              delete _gwPending[msg.id];
+              if (msg.ok !== false) cb.resolve(msg.payload);
+              else cb.reject(new Error(msg.error?.message || 'RPC error'));
+            }
+            // After connect handshake succeeds
+            if (msg.id && msg.id.startsWith('connect-')) {
+              _gwConnected = true;
+              setGW('on', 'Online');
+              addLog('ok', 'Gateway connected via WebSocket');
+              document.getElementById('offbar').classList.remove('show');
+            }
+          }
+          if (msg.type === 'event' && msg.event === 'chat') {
+            // Handle streaming chat responses
+            const p = msg.payload;
+            if (p && p.state === 'final' && p.message) {
+              const txt = typeof p.message === 'string' ? p.message :
+                (p.message.content && Array.isArray(p.message.content))
+                  ? p.message.content.filter(c => c.type === 'text').map(c => c.text).join('')
+                  : JSON.stringify(p.message);
+              // Resolve any pending chat request for this session
+              Object.keys(_gwPending).forEach(id => {
+                if (id.startsWith('chat-')) { _gwPending[id].resolve(txt); delete _gwPending[id]; }
+              });
+            }
+          }
+        } catch (e) { console.error('GW msg parse error:', e); }
+      };
+      _gwWs.onclose = () => { _gwConnected = false; _gwWs = null; };
+      _gwWs.onerror = () => { };
+    }
 
-// ════ Pipeline ════
-const STEPS=[
-  {id:'scout',label:'Scout querying Apollo.io…'},
-  {id:'enricher',label:'Enricher gathering context via Exa.ai…'},
-  {id:'drafter',label:'Drafter writing emails with Claude…'},
-  {id:'sheets',label:'SheetsBot writing to Google Sheet…'}
-];
+    function gwRpc(method, params, timeout) {
+      return new Promise((resolve, reject) => {
+        if (!_gwWs || _gwWs.readyState !== WebSocket.OPEN) {
+          gwConnect();
+          return reject(new Error('Gateway not connected'));
+        }
+        const id = method + '-' + (++_gwReqId);
+        const timer = setTimeout(() => { delete _gwPending[id]; reject(new Error('Timeout')); }, timeout || 30000);
+        _gwPending[id] = {
+          resolve: (v) => { clearTimeout(timer); resolve(v); },
+          reject: (e) => { clearTimeout(timer); reject(e); }
+        };
+        _gwWs.send(JSON.stringify({ type: 'req', id, method, params }));
+      });
+    }
 
-function runPipe(){
-  if(S.running)return;S.running=true;
-  setPTag('tam','Running');
-  document.getElementById('ds-pipe').textContent='Running';
-  addLog('sys','Outreach pipeline started');
-  const pcts=[8,30,60,88,100];let i=0;
-  const next=()=>{
-    if(i>=STEPS.length){finPipe();return;}
-    const s=STEPS[i];
-    setPN(s.id,'run','Running…');
-    document.getElementById('pbar').style.width=pcts[i]+'%';
-    addLog('ag',s.label,s.id);
-    if(S.gwOn){gwSend(s.id,'Execute your primary workflow now.').then(r=>addLog('ok',s.id+': '+r.slice(0,80))).catch(e=>addLog('w',s.id+' error: '+e.message));}
-    setTimeout(()=>{setPN(s.id,'done','Done ✓');addLog('ok',s.id+' complete');i++;setTimeout(next,400);},2100);
-  };
-  next();
-}
+    async function gwSend(agentId, msg) {
+      const sessionKey = 'agent:' + agentId + ':compcommand';
+      const res = await gwRpc('chat.send', {
+        sessionKey: sessionKey,
+        message: msg,
+        deliver: false,
+        idempotencyKey: 'cc-' + Date.now()
+      }, 60000);
+      // For chat.send, the response comes via the 'chat' event, not the RPC reply
+      // But if we get a direct reply, use it
+      if (res && typeof res === 'object') return res.message || JSON.stringify(res);
+      if (typeof res === 'string') return res;
+      return 'Command sent to ' + agentId;
+    }
 
-function finPipe(){
-  document.getElementById('pbar').style.width='100%';
-  setTimeout(()=>{
-    setPTag('tgr','Complete');document.getElementById('ds-pipe').textContent='Done';
-    document.getElementById('pbar').style.width='0%';S.running=false;
-    const n=15+Math.floor(Math.random()*18);
-    document.getElementById('ds-leads').textContent=n;
-    document.getElementById('ds-lsub').textContent='+'+n+' this run';
-    addLog('ok','Pipeline complete — '+n+' leads added to sheet');
-    addDemoLeads(n);
-  },700);
-}
+    async function gwSaveAgent(a) {
+      try {
+        await gwRpc('agents.files.set', {
+          agentId: a.id, name: 'SOUL.md', content: a.soul || ''
+        }, 10000);
+        if (a.instr) await gwRpc('agents.files.set', {
+          agentId: a.id, name: 'AGENTS.md', content: a.instr
+        }, 10000);
+        if (a.hb) await gwRpc('agents.files.set', {
+          agentId: a.id, name: 'HEARTBEAT.md', content: a.hb
+        }, 10000);
+        return true;
+      } catch { return false; }
+    }
 
-function setPTag(cls,txt){const t=document.getElementById('ptag');if(t){t.className='tag '+cls;t.textContent=txt;}}
+    async function gwCreateAgent(a) {
+      // Create agent workspace files
+      return gwSaveAgent(a);
+    }
 
-function setPN(id,cls,lbl){
-  const n=document.getElementById('pn-'+id);if(n)n.className='pn'+(cls==='run'?' run':cls==='done'?' done':'');
-  const s=document.getElementById('ps-'+id);if(s)s.textContent=lbl;
-}
 
-async function runAgent(id){
-  const a=S.agents.find(x=>x.id===id);if(!a)return;
-  addLog('ag','Running '+a.emoji+' '+a.name+'…',a.name);
-  if(S.gwOn){try{const r=await gwSend(id,'Execute workflow.');addLog('ok',a.name+': '+r.slice(0,100));}catch(e){addLog('w',a.name+' error: '+e.message);}}
-  else setTimeout(()=>addLog('ok',a.name+' simulated complete'),1800);
-}
+    // ════ Pipeline ════
+    const STEPS = [
+      { id: 'scout', label: 'Scout querying Apollo.io…' },
+      { id: 'enricher', label: 'Enricher gathering context via Exa.ai…' },
+      { id: 'drafter', label: 'Drafter writing emails with Claude…' },
+      { id: 'sheets', label: 'SheetsBot writing to Google Sheet…' }
+    ];
 
-// ════ Agent rendering ════
-function renderGrid(team){
-  const ag=S.agents.filter(a=>a.team===team);
-  const id=team==='outreach'?'outGrid':'devGrid';
-  const el=document.getElementById(id);if(!el)return;
-  const tc=team==='outreach'?'out':'dev';
-  el.innerHTML=ag.map(a=>`
+    function runPipe() {
+      if (S.running) return; S.running = true;
+      setPTag('tam', 'Running');
+      document.getElementById('ds-pipe').textContent = 'Running';
+      addLog('sys', 'Outreach pipeline started');
+      const pcts = [8, 30, 60, 88, 100]; let i = 0;
+      const next = () => {
+        if (i >= STEPS.length) { finPipe(); return; }
+        const s = STEPS[i];
+        setPN(s.id, 'run', 'Running…');
+        document.getElementById('pbar').style.width = pcts[i] + '%';
+        addLog('ag', s.label, s.id);
+        if (S.gwOn) { gwSend(s.id, 'Execute your primary workflow now.').then(r => addLog('ok', s.id + ': ' + r.slice(0, 80))).catch(e => addLog('w', s.id + ' error: ' + e.message)); }
+        setTimeout(() => { setPN(s.id, 'done', 'Done ✓'); addLog('ok', s.id + ' complete'); i++; setTimeout(next, 400); }, 2100);
+      };
+      next();
+    }
+
+    function finPipe() {
+      document.getElementById('pbar').style.width = '100%';
+      setTimeout(() => {
+        setPTag('tgr', 'Complete'); document.getElementById('ds-pipe').textContent = 'Done';
+        document.getElementById('pbar').style.width = '0%'; S.running = false;
+        const n = 15 + Math.floor(Math.random() * 18);
+        document.getElementById('ds-leads').textContent = n;
+        document.getElementById('ds-lsub').textContent = '+' + n + ' this run';
+        addLog('ok', 'Pipeline complete — ' + n + ' leads added to sheet');
+        addDemoLeads(n);
+      }, 700);
+    }
+
+    function setPTag(cls, txt) { const t = document.getElementById('ptag'); if (t) { t.className = 'tag ' + cls; t.textContent = txt; } }
+
+    function setPN(id, cls, lbl) {
+      const n = document.getElementById('pn-' + id); if (n) n.className = 'pn' + (cls === 'run' ? ' run' : cls === 'done' ? ' done' : '');
+      const s = document.getElementById('ps-' + id); if (s) s.textContent = lbl;
+    }
+
+    async function runAgent(id) {
+      const a = S.agents.find(x => x.id === id); if (!a) return;
+      addLog('ag', 'Running ' + a.name + '…', a.name);
+      if (S.gwOn) { try { const r = await gwSend(id, 'Execute workflow.'); addLog('ok', a.name + ': ' + r.slice(0, 100)); } catch (e) { addLog('w', a.name + ' error: ' + e.message); } }
+      else setTimeout(() => addLog('ok', a.name + ' simulated complete'), 1800);
+    }
+
+    // ════ Agent rendering ════
+    function renderGrid(team) {
+      const ag = S.agents.filter(a => a.team === team);
+      const id = team === 'outreach' ? 'outGrid' : 'devGrid';
+      const el = document.getElementById(id); if (!el) return;
+      const tc = team === 'outreach' ? 'out' : 'dev';
+      el.innerHTML = ag.map(a => `
     <div class="agc ${tc}" onclick="openAM('${a.id}')">
-      <div class="ag-top"><div class="ag-ico">${a.emoji}</div>
-        <span class="badge ${a.status==='online'?'bon':a.status==='running'?'brun':'boff'}"><span class="bdot"></span>${a.status==='online'?'Online':a.status==='running'?'Running':'Offline'}</span>
+      <div class="ag-top"><div class="ag-ico">${Icons[a.icon] || Icons.bot}</div>
+        <span class="badge ${a.status === 'online' ? 'bon' : a.status === 'running' ? 'brun' : 'boff'}"><span class="bdot"></span>${a.status === 'online' ? 'Online' : a.status === 'running' ? 'Running' : 'Offline'}</span>
       </div>
       <div class="ag-name">${a.name}</div>
       <div class="ag-role">${a.role}</div>
@@ -809,195 +2252,215 @@ function renderGrid(team){
         <div class="ag-btns"><button class="btn btn-s btn-xs" onclick="event.stopPropagation();runAgent('${a.id}')">Run</button><button class="btn btn-g btn-xs" onclick="event.stopPropagation();openAM('${a.id}')">Edit</button></div>
       </div>
     </div>`).join('');
-}
+    }
 
-function renderDevSum(){
-  const el=document.getElementById('devSum');if(!el)return;
-  el.innerHTML=S.agents.filter(a=>a.team==='dev').map(a=>`
+    function renderDevSum() {
+      const el = document.getElementById('devSum'); if (!el) return;
+      el.innerHTML = S.agents.filter(a => a.team === 'dev').map(a => `
     <tr>
-      <td>${a.emoji} ${a.name}</td>
-      <td><span class="badge ${a.status==='online'?'bon':'boff'}">${a.status}</span></td>
+      <td><span style="display:inline-flex;align-items:center;gap:6px">${Icons[a.icon] || Icons.bot} ${a.name}</span></td>
+      <td><span class="badge ${a.status === 'online' ? 'bon' : 'boff'}">${a.status}</span></td>
       <td style="color:var(--t3);font-size:11px">${a.lastRun}</td>
       <td><button class="btn btn-g btn-xs" onclick="openAM('${a.id}')">Edit</button></td>
     </tr>`).join('');
-}
+    }
 
-// ════ Modal ════
-function openAM(id){
-  const a=S.agents.find(x=>x.id===id);if(!a)return;S.cur=id;
-  document.getElementById('amTitle').textContent=a.emoji+' '+a.name;
-  document.getElementById('e-soul').value=a.soul||'';
-  document.getElementById('e-instr').value=a.instr||'';
-  document.getElementById('e-hb').value=a.hb||'';
-  document.getElementById('e-name').value=a.name||'';
-  document.getElementById('e-emoji').value=a.emoji||'';
-  document.getElementById('e-role').value=a.role||'';
-  document.getElementById('e-team').value=a.team||'outreach';
-  document.getElementById('e-ws').value='~/.openclaw/workspace-'+id;
-  stab('soul');oMod('agMod');
-}
+    // ════ Modal ════
+    function openAM(id) {
+      const a = S.agents.find(x => x.id === id); if (!a) return; S.cur = id;
+      document.getElementById('amTitle').innerHTML = `<span style="display:flex;align-items:center;gap:8px">${Icons[a.icon] || Icons.bot} ${a.name}</span>`;
+      document.getElementById('e-soul').value = a.soul || '';
+      document.getElementById('e-instr').value = a.instr || '';
+      document.getElementById('e-hb').value = a.hb || '';
+      document.getElementById('e-name').value = a.name || '';
+      document.getElementById('e-icon').value = a.icon || 'bot';
+      document.getElementById('e-role').value = a.role || '';
+      document.getElementById('e-team').value = a.team || 'outreach';
+      document.getElementById('e-ws').value = '~/.openclaw/workspace-' + id;
+      stab('soul'); oMod('agMod');
+    }
 
-async function saveAgent(){
-  const a=S.agents.find(x=>x.id===S.cur);if(!a)return;
-  a.soul=document.getElementById('e-soul').value;
-  a.instr=document.getElementById('e-instr').value;
-  a.hb=document.getElementById('e-hb').value;
-  a.name=document.getElementById('e-name').value||a.name;
-  a.emoji=document.getElementById('e-emoji').value||a.emoji;
-  a.role=document.getElementById('e-role').value||a.role;
-  a.team=document.getElementById('e-team').value||a.team;
-  const ok=await gwSaveAgent(a);
-  addLog('ok','Saved '+a.emoji+' '+a.name+(ok?' → OpenClaw updated':' (local only — gateway offline)'));
-  cMod('agMod');renderGrid(a.team);renderDevSum();
-}
+    async function saveAgent() {
+      const a = S.agents.find(x => x.id === S.cur); if (!a) return;
+      a.soul = document.getElementById('e-soul').value;
+      a.instr = document.getElementById('e-instr').value;
+      a.hb = document.getElementById('e-hb').value;
+      a.name = document.getElementById('e-name').value || a.name;
+      a.icon = document.getElementById('e-icon').value || a.icon;
+      a.role = document.getElementById('e-role').value || a.role;
+      a.team = document.getElementById('e-team').value || a.team;
+      const ok = await gwSaveAgent(a);
+      addLog('ok', 'Saved ' + a.name + (ok ? ' → OpenClaw updated' : ' (local only — gateway offline)'));
+      cMod('agMod'); renderGrid(a.team); renderDevSum();
+    }
 
-async function delAgent(){
-  if(!confirm('Delete this agent?'))return;
-  const a=S.agents.find(x=>x.id===S.cur);
-  S.agents=S.agents.filter(x=>x.id!==S.cur);
-  document.getElementById('ds-tot').textContent=S.agents.length;
-  addLog('w','Deleted: '+(a?a.emoji+' '+a.name:S.cur));
-  cMod('agMod');renderGrid('outreach');renderGrid('dev');renderDevSum();
-}
+    async function delAgent() {
+      if (!confirm('Delete this agent?')) return;
+      const a = S.agents.find(x => x.id === S.cur);
+      S.agents = S.agents.filter(x => x.id !== S.cur);
+      document.getElementById('ds-tot').textContent = S.agents.length;
+      addLog('w', 'Deleted: ' + (a ? a.name : S.cur));
+      cMod('agMod'); renderGrid('outreach'); renderGrid('dev'); renderDevSum();
+    }
 
-function testAgentModal(){
-  document.getElementById('testTitle').textContent='Test: '+S.cur;
-  document.getElementById('testPrompt').value='';
-  document.getElementById('testOut').innerHTML='<div class="lg"><span class="lsy">Enter a prompt and click Send.</span></div>';
-  oMod('testMod');
-}
+    function testAgentModal() {
+      document.getElementById('testTitle').textContent = 'Test: ' + S.cur;
+      document.getElementById('testPrompt').value = '';
+      document.getElementById('testOut').innerHTML = '<div class="lg"><span class="lsy">Enter a prompt and click Send.</span></div>';
+      oMod('testMod');
+    }
 
-async function runTest(){
-  const p=document.getElementById('testPrompt').value.trim();if(!p)return;
-  const out=document.getElementById('testOut');
-  out.innerHTML='<div class="lg"><span class="lag pulse">Sending…</span></div>';
-  if(!S.gwOn){out.innerHTML='<div class="lg"><span class="lw">Gateway offline. Start with: openclaw gateway</span></div>';return;}
-  try{const r=await gwSend(S.cur,p);out.innerHTML='<div class="lg"><span class="lok">'+r.replace(/</g,'&lt;')+'</span></div>';}
-  catch(e){out.innerHTML='<div class="lg"><span class="le">Error: '+e.message+'</span></div>';}
-}
+    async function runTest() {
+      const p = document.getElementById('testPrompt').value.trim(); if (!p) return;
+      const out = document.getElementById('testOut');
+      out.innerHTML = '<div class="lg"><span class="lag pulse">Sending…</span></div>';
+      if (!S.gwOn) { out.innerHTML = '<div class="lg"><span class="lw">Gateway offline. Start with: openclaw gateway</span></div>'; return; }
+      try { const r = await gwSend(S.cur, p); out.innerHTML = '<div class="lg"><span class="lok">' + r.replace(/</g, '&lt;') + '</span></div>'; }
+      catch (e) { out.innerHTML = '<div class="lg"><span class="le">Error: ' + e.message + '</span></div>'; }
+    }
 
-// ════ Create agent ════
-async function createAgent(){
-  const id=document.getElementById('na-id').value.trim().toLowerCase().replace(/\s+/g,'-');
-  const name=document.getElementById('na-name').value.trim();
-  if(!id||!name){alert('ID and name required.');return;}
-  if(S.agents.find(a=>a.id===id)){alert('ID already exists.');return;}
-  const a={id,name,emoji:document.getElementById('na-emoji').value||'🤖',role:document.getElementById('na-role').value,team:document.getElementById('na-team').value,status:'offline',lastRun:'Never',soul:document.getElementById('na-soul').value,instr:document.getElementById('na-instr').value,hb:document.getElementById('na-hb').value};
-  S.agents.push(a);
-  document.getElementById('ds-tot').textContent=S.agents.length;
-  const ok=await gwCreateAgent(a);
-  addLog('ok','Created '+a.emoji+' '+a.name+(ok?' → registered with OpenClaw':' (local — start gateway to register)'));
-  ['na-id','na-name','na-role','na-soul','na-instr','na-hb'].forEach(x=>document.getElementById(x).value='');
-  document.getElementById('na-emoji').value='🤖';
-  go(a.team==='dev'?'dev-agents':'out-agents');
-}
+    // ════ Create agent ════
+    async function createAgent() {
+      const id = document.getElementById('na-id').value.trim().toLowerCase().replace(/\s+/g, '-');
+      const name = document.getElementById('na-name').value.trim();
+      if (!id || !name) { alert('ID and name required.'); return; }
+      if (S.agents.find(a => a.id === id)) { alert('ID already exists.'); return; }
+      const a = { id, name, icon: document.getElementById('na-icon').value || 'bot', role: document.getElementById('na-role').value, team: document.getElementById('na-team').value, status: 'offline', lastRun: 'Never', soul: document.getElementById('na-soul').value, instr: document.getElementById('na-instr').value, hb: document.getElementById('na-hb').value };
+      S.agents.push(a);
+      document.getElementById('ds-tot').textContent = S.agents.length;
+      const ok = await gwCreateAgent(a);
+      addLog('ok', 'Created ' + a.name + (ok ? ' → registered with OpenClaw' : ' (local — start gateway to register)'));
+      ['na-id', 'na-name', 'na-role', 'na-soul', 'na-instr', 'na-hb'].forEach(x => document.getElementById(x).value = '');
+      document.getElementById('na-icon').value = 'bot';
+      go(a.team === 'dev' ? 'dev-agents' : 'out-agents');
+    }
 
-// ════ Dev runner ════
-async function sendDevCmd(){
-  const id=document.getElementById('devAg').value;
-  const cmd=document.getElementById('devCmd').value.trim();if(!cmd)return;
-  const a=S.agents.find(x=>x.id===id)||{name:id,emoji:'🤖'};
-  const log=document.getElementById('devLog');
-  addLT(log,'ag','→ '+a.emoji+' '+a.name+': '+cmd);
-  if(!S.gwOn){addLT(log,'w','Gateway offline — openclaw gateway');return;}
-  addLT(log,'sy','Waiting for response…');
-  try{const r=await gwSend(id,cmd);addLT(log,'ok',r);}
-  catch(e){addLT(log,'err','Error: '+e.message);}
-}
+    // ════ Dev runner ════
+    async function sendDevCmd() {
+      const id = document.getElementById('devAg').value;
+      const cmd = document.getElementById('devCmd').value.trim(); if (!cmd) return;
+      const a = S.agents.find(x => x.id === id) || { name: id, icon: 'bot' };
+      const log = document.getElementById('devLog');
+      addLT(log, 'ag', '→ ' + a.name + ': ' + cmd);
+      if (!S.gwOn) { addLT(log, 'w', 'Gateway offline — openclaw gateway'); return; }
+      addLT(log, 'sy', 'Waiting for response…');
+      try { const r = await gwSend(id, cmd); addLT(log, 'ok', r); }
+      catch (e) { addLT(log, 'err', 'Error: ' + e.message); }
+    }
 
-// ════ Leads ════
-function addDemoLeads(count){
-  const pool=[
-    ['Sarah','Mitchell','Chief Compliance Officer','Meridian Financial','Financial Services',9],
-    ['Marcus','Chen','VP of Compliance','HealthFirst Partners','Healthcare',8],
-    ['Jennifer','Torres','Director of Risk','LegalEdge LLP','Legal Services',7],
-    ['Robert','Walsh','CISO','Summit Insurance Group','Insurance',8],
-    ['Amanda','Park','Head of AI','Finbridge Capital','Fintech',7],
-    ['David','Morrison','Director of GRC','Cascade Medical','Healthcare',9],
-    ['Lisa','Hamilton','Chief Risk Officer','Atlas Financial','Financial Services',10],
-    ['Kevin','Brooks','VP Information Security','PacificCare Health','Healthcare',8],
-  ];
-  pool.slice(0,Math.min(count,pool.length)).forEach(([f,l,t,co,ind,sc])=>{
-    const em=f.toLowerCase()+'.'+l.toLowerCase()+'@'+co.toLowerCase().replace(/\s+/g,'')+'.com';
-    if(!S.leads.find(x=>x.email===em))S.leads.push({first:f,last:l,title:t,company:co,industry:ind,score:sc,email:em,subject:'Quick question about AI governance at '+co,status:'Draft - Pending Review'});
-  });
-  renderLeads();
-}
+    // ════ Leads ════
+    function addDemoLeads(count) {
+      const pool = [
+        ['Sarah', 'Mitchell', 'Chief Compliance Officer', 'Meridian Financial', 'Financial Services', 9],
+        ['Marcus', 'Chen', 'VP of Compliance', 'HealthFirst Partners', 'Healthcare', 8],
+        ['Jennifer', 'Torres', 'Director of Risk', 'LegalEdge LLP', 'Legal Services', 7],
+        ['Robert', 'Walsh', 'CISO', 'Summit Insurance Group', 'Insurance', 8],
+        ['Amanda', 'Park', 'Head of AI', 'Finbridge Capital', 'Fintech', 7],
+        ['David', 'Morrison', 'Director of GRC', 'Cascade Medical', 'Healthcare', 9],
+        ['Lisa', 'Hamilton', 'Chief Risk Officer', 'Atlas Financial', 'Financial Services', 10],
+        ['Kevin', 'Brooks', 'VP Information Security', 'PacificCare Health', 'Healthcare', 8],
+      ];
+      pool.slice(0, Math.min(count, pool.length)).forEach(([f, l, t, co, ind, sc]) => {
+        const em = f.toLowerCase() + '.' + l.toLowerCase() + '@' + co.toLowerCase().replace(/\s+/g, '') + '.com';
+        if (!S.leads.find(x => x.email === em)) S.leads.push({ first: f, last: l, title: t, company: co, industry: ind, score: sc, email: em, subject: 'Quick question about AI governance at ' + co, status: 'Draft - Pending Review' });
+      });
+      renderLeads();
+    }
 
-function renderLeads(){
-  const t=document.getElementById('leadTag');if(t)t.textContent=S.leads.length+' leads';
-  const b=document.getElementById('leadsB');if(!b)return;
-  if(!S.leads.length){b.innerHTML='<tr><td colspan="7"><div class="empty">No leads yet. Run the pipeline.</div></td></tr>';return;}
-  b.innerHTML=S.leads.map(l=>`<tr>
+    function renderLeads() {
+      const t = document.getElementById('leadTag'); if (t) t.textContent = S.leads.length + ' leads';
+      const b = document.getElementById('leadsB'); if (!b) return;
+      if (!S.leads.length) { b.innerHTML = '<tr><td colspan="7"><div class="empty">No leads yet. Run the pipeline.</div></td></tr>'; return; }
+      b.innerHTML = S.leads.map(l => `<tr>
     <td style="font-weight:500">${l.first} ${l.last}</td>
     <td style="font-size:11.5px;color:var(--t2)">${l.title}</td>
     <td>${l.company}</td>
     <td style="font-size:11px;color:var(--t3)">${l.industry}</td>
-    <td><span class="tag ${l.score>=9?'tgr':l.score>=7?'tam':'tg'}">${l.score}/10</span></td>
+    <td><span class="tag ${l.score >= 9 ? 'tgr' : l.score >= 7 ? 'tam' : 'tg'}">${l.score}/10</span></td>
     <td style="font-size:11.5px;color:var(--t2);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.subject}</td>
     <td><span class="tag tg" style="font-size:9.5px">${l.status}</span></td>
   </tr>`).join('');
-}
+    }
 
-function openSheet(){const u=(document.getElementById('s-sheet')||{}).value;if(u)window.open(u,'_blank');else alert('Add your Google Sheet URL in Settings.');}
+    function openSheet() { const u = (document.getElementById('s-sheet') || {}).value; if (u) window.open(u, '_blank'); else alert('Add your Google Sheet URL in Settings.'); }
 
-// ════ Logs ════
-function ts(){return new Date().toTimeString().slice(0,8);}
-function makeLn(t,m,ag){const c={ok:'lok',w:'lw',err:'le',ag:'lag',sys:'lsy'}[t]||'li';const a=ag?`<span class="lag">[${ag}]</span> `:'';return`<div class="lg"><span class="lt">${ts()}</span>${a}<span class="${c}">${m}</span></div>`;}
-function addLog(t,m,ag){
-  const ln=makeLn(t,m,ag);
-  ['dashLog','pipeLog','fullLog'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    const ph=el.querySelector('.li,.lsy');
-    if(ph&&(ph.textContent.includes('Waiting')||ph.textContent.includes('No runs')||ph.textContent.includes('No activity')))el.innerHTML='';
-    el.innerHTML+=ln;el.scrollTop=el.scrollHeight;
-  });
-}
-function addLT(el,t,m){if(!el)return;el.innerHTML+=makeLn(t,m);el.scrollTop=el.scrollHeight;}
-function clearLogs(){document.getElementById('fullLog').innerHTML='<div class="lg"><span class="li">Log cleared.</span></div>';}
+    // ════ Logs ════
+    function ts() { return new Date().toTimeString().slice(0, 8); }
+    function makeLn(t, m, ag) { const c = { ok: 'lok', w: 'lw', err: 'le', ag: 'lag', sys: 'lsy' }[t] || 'li'; const a = ag ? `<span class="lag">[${ag}]</span> ` : ''; return `<div class="lg"><span class="lt">${ts()}</span>${a}<span class="${c}">${m}</span></div>`; }
+    function addLog(t, m, ag) {
+      const ln = makeLn(t, m, ag);
+      ['dashLog', 'pipeLog', 'fullLog'].forEach(id => {
+        const el = document.getElementById(id); if (!el) return;
+        const ph = el.querySelector('.li,.lsy');
+        if (ph && (ph.textContent.includes('Waiting') || ph.textContent.includes('No runs') || ph.textContent.includes('No activity'))) el.innerHTML = '';
+        el.innerHTML += ln; el.scrollTop = el.scrollHeight;
+      });
+    }
+    function addLT(el, t, m) { if (!el) return; el.innerHTML += makeLn(t, m); el.scrollTop = el.scrollHeight; }
+    function clearLogs() { document.getElementById('fullLog').innerHTML = '<div class="lg"><span class="li">Log cleared.</span></div>'; }
 
-// ════ Modal helpers ════
-function oMod(id){document.getElementById(id).classList.add('open');}
-function cMod(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+    // ════ Modal helpers ════
+    function oMod(id) { document.getElementById(id).classList.add('open'); }
+    function cMod(id) { document.getElementById(id).classList.remove('open'); }
 
-function stab(n){
-  ['soul','instr','hb','info'].forEach(t=>{const e=document.getElementById('et-'+t);if(e)e.style.display=t===n?'block':'none';});
-  document.querySelectorAll('#agMod .tb').forEach((b,i)=>b.classList.toggle('on',['soul','instr','hb','info'][i]===n));
-}
+    function stab(n) {
+      ['soul', 'instr', 'hb', 'info'].forEach(t => { const e = document.getElementById('et-' + t); if (e) e.style.display = t === n ? 'block' : 'none'; });
+      document.querySelectorAll('#agMod .tb').forEach((b, i) => b.classList.toggle('on', ['soul', 'instr', 'hb', 'info'][i] === n));
+    }
 
-// ════ Settings ════
-function saveSettings(){
-  ['s-ant','s-apol','s-exa','s-sheet','s-gw'].forEach(k=>{const e=document.getElementById(k);if(e&&e.value)localStorage.setItem(k,e.value);});
-  upApi('s-ant','antS','antB');upApi('s-apol','apolS','apolB');upApi('s-exa','exaS','exaB');
-  addLog('ok','Settings saved');
-}
-function upApi(k,sid,bid){
-  const v=(document.getElementById(k)||{}).value;
-  const s=document.getElementById(sid);const b=document.getElementById(bid);if(!s||!b)return;
-  if(v&&v.length>8){s.textContent='Configured';b.className='badge bon';b.textContent='✓';}
-  else{s.textContent='Not configured';b.className='badge boff';b.textContent='—';}
-}
-function loadSettings(){
-  ['s-ant','s-apol','s-exa','s-sheet','s-gw'].forEach(k=>{const v=localStorage.getItem(k);const e=document.getElementById(k);if(v&&e)e.value=v;});
-  saveSettings();
-}
+    // ════ Settings ════
+    function saveSettings() {
+      ['s-ant', 's-apol', 's-exa', 's-sheet', 's-gw', 's-gwt'].forEach(k => { const e = document.getElementById(k); if (e && e.value) localStorage.setItem(k, e.value); });
+      upApi('s-ant', 'antS', 'antB'); upApi('s-apol', 'apolS', 'apolB'); upApi('s-exa', 'exaS', 'exaB');
+      addLog('ok', 'Settings saved');
+    }
+    function upApi(k, sid, bid) {
+      const v = (document.getElementById(k) || {}).value;
+      const s = document.getElementById(sid); const b = document.getElementById(bid); if (!s || !b) return;
+      if (v && v.length > 8) { s.textContent = 'Configured'; b.className = 'badge bon'; b.textContent = '✓'; }
+      else { s.textContent = 'Not configured'; b.className = 'badge boff'; b.textContent = '—'; }
+    }
+    function loadSettings() {
+      ['s-ant', 's-apol', 's-exa', 's-sheet', 's-gw', 's-gwt'].forEach(k => { const v = localStorage.getItem(k); const e = document.getElementById(k); if (v && e) e.value = v; });
+      saveSettings();
+    }
 
-// ════ Telegram ════
-function prevTg(){const t=document.getElementById('tg-off');const p=document.getElementById('tgPrev');if(t&&p)p.textContent=t.value;}
-function saveTgMsg(){localStorage.setItem('tg-off',(document.getElementById('tg-off')||{}).value);addLog('ok','Offline message saved');}
-function saveTgSet(){const t=(document.getElementById('tg-tok')||{}).value;if(t)localStorage.setItem('tg-tok',t);addLog('ok','Telegram settings saved');}
-function testTg(){addLog('sys','Sending test Telegram message…');setTimeout(()=>addLog('ok','Test sent — check your bot'),1200);}
+    // ════ Telegram ════
+    function prevTg() { const t = document.getElementById('tg-off'); const p = document.getElementById('tgPrev'); if (t && p) p.textContent = t.value; }
+    function saveTgMsg() { localStorage.setItem('tg-off', (document.getElementById('tg-off') || {}).value); addLog('ok', 'Offline message saved'); }
+    function saveTgSet() { const t = (document.getElementById('tg-tok') || {}).value; if (t) localStorage.setItem('tg-tok', t); addLog('ok', 'Telegram settings saved'); }
+    function testTg() { addLog('sys', 'Sending test Telegram message…'); setTimeout(() => addLog('ok', 'Test sent — check your bot'), 1200); }
 
-// ════ Misc ════
-function refreshAll(){checkGW();renderDevSum();}
+    // ════ Misc ════
+    function refreshAll() { checkGW(); renderDevSum(); }
 
-// ════ Init ════
-document.addEventListener('DOMContentLoaded',()=>{
-  loadSettings();go('dashboard');renderDevSum();checkGW();
-  const sm=localStorage.getItem('tg-off');if(sm){const e=document.getElementById('tg-off');const p=document.getElementById('tgPrev');if(e)e.value=sm;if(p)p.textContent=sm;}
-  setInterval(checkGW,60000);
-});
-</script>
+    // ════ Init ════
+    function init() {
+      // Wire nav buttons
+      document.querySelectorAll('.nb[data-p]').forEach(b => b.addEventListener('click', () => go(b.dataset.p)));
+      // Wire modal overlay close-on-backdrop-click
+      document.querySelectorAll('.ov').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); }));
+      // Read token from URL hash (#token=...) set by `openclaw dashboard`
+      const hash = window.location.hash;
+      if (hash && hash.includes('token=')) {
+        const tok = hash.split('token=')[1].split('&')[0];
+        if (tok) {
+          const tf = document.getElementById('s-gwt');
+          if (tf) { tf.value = tok; localStorage.setItem('s-gwt', tok); }
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+      }
+      loadSettings(); go('dashboard'); renderDevSum(); checkGW();
+      const sm = localStorage.getItem('tg-off'); if (sm) { const e = document.getElementById('tg-off'); const p = document.getElementById('tgPrev'); if (e) e.value = sm; if (p) p.textContent = sm; }
+      setInterval(checkGW, 60000);
+    }
+    // Safe init: works both when DOM is already ready and when it isn't yet
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
 </body>
+
 </html>
