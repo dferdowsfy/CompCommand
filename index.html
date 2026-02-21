@@ -1813,6 +1813,12 @@
                 </div>
                 <div class="apirow">
                   <div>
+                    <div class="aname">OpenRouter</div>
+                    <div class="asub" id="orS">Not configured</div>
+                  </div><span class="badge boff" id="orB">—</span>
+                </div>
+                <div class="apirow">
+                  <div>
                     <div class="aname">Anthropic</div>
                     <div class="asub" id="antS">Not configured</div>
                   </div><span class="badge boff" id="antB">—</span>
@@ -2024,9 +2030,22 @@
             <div class="card mb12">
               <div class="ch"><span class="ct">API Keys</span></div>
               <div class="cb">
+                <div class="fr"><label class="fl">OpenRouter API Key</label><input class="fi mono" type="password"
+                    id="s-or" placeholder="sk-or-v1-…" />
+                  <div class="fhint">Primary LLM backend for Agents via OpenRouter</div>
+                </div>
+                <div class="fr"><label class="fl">Model Selection</label>
+                  <select class="fsel" id="s-model">
+                    <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                    <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
+                    <option value="openai/gpt-4o">GPT-4o</option>
+                    <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+                    <option value="google/gemini-pro-1.5">Gemini 1.5 Pro</option>
+                  </select>
+                </div>
                 <div class="fr"><label class="fl">Anthropic API Key</label><input class="fi mono" type="password"
                     id="s-ant" placeholder="sk-ant-…" />
-                  <div class="fhint">Used by Drafter for email generation</div>
+                  <div class="fhint">Optional direct fallback</div>
                 </div>
                 <div class="fr"><label class="fl">Apollo.io API Key</label><input class="fi mono" type="password"
                     id="s-apol" placeholder="Apollo key…" />
@@ -2749,25 +2768,32 @@ openclaw gateway</textarea></div>
       renderGrid(a.team); renderDevSum();
     }
 
-    async function runAgentFallback(a, apiKey) {
+    async function runAgentFallback(a, orKey, antKey, model) {
       apAddStep('Connecting to LLM (Live)');
       const prompt = "You are executing your standard workflow as an AI agent.\\n\\nName: " + a.name + "\\nRole: " + a.role + "\\nInstructions:\\n" + a.instr + "\\n\\nPlease provide the final output. Describe the exact sub-steps you've magically executed, what resources you utilized, and output the final result. Keep it under 200 words and format as clean text.";
 
-      const payload = {
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 500,
-        messages: [{ role: 'user', content: prompt }],
-        stream: true
-      };
+      let payload, targetUrl, headers;
+
+      if (orKey) {
+        payload = {
+          model: model || 'anthropic/claude-3.5-sonnet',
+          messages: [{ role: 'system', content: prompt }],
+          stream: true
+        };
+        targetUrl = 'https://openrouter.ai/api/v1/chat/completions';
+        headers = { 'x-target-url': targetUrl, 'authorization': 'Bearer ' + orKey, 'content-type': 'application/json', 'HTTP-Referer': window.location.origin, 'X-Title': 'CompCommand' };
+      } else {
+        payload = {
+          model: 'claude-3-haiku-20240307', max_tokens: 500,
+          messages: [{ role: 'user', content: prompt }], stream: true
+        };
+        targetUrl = 'https://api.anthropic.com/v1/messages';
+        headers = { 'x-target-url': targetUrl, 'x-api-key': antKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' };
+      }
 
       const res = await fetch('/api/proxy', {
         method: 'POST',
-        headers: {
-          'x-target-url': 'https://api.anthropic.com/v1/messages',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json'
-        },
+        headers: headers,
         body: JSON.stringify(payload)
       });
 
@@ -2790,12 +2816,17 @@ openclaw gateway</textarea></div>
         const lines = chunk.split('\\n');
         for (const line of lines) {
           if (line.startsWith('data: ')) {
-            const dataStr = line.slice(6);
-            if (dataStr.trim() === '[DONE]') continue;
+            const dataStr = line.slice(6).trim();
+            if (dataStr === '[DONE]') continue;
             try {
               const data = JSON.parse(dataStr);
-              if (data.type === 'content_block_delta' && data.delta && data.delta.text) {
-                const t = data.delta.text;
+              let t = '';
+              if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
+                t = data.choices[0].delta.content;
+              } else if (data.type === 'content_block_delta' && data.delta && data.delta.text) {
+                t = data.delta.text;
+              }
+              if (t) {
                 fullText += t;
                 if (!apState._buffer) apState._buffer = '';
                 apState._buffer += t;
@@ -2843,11 +2874,14 @@ openclaw gateway</textarea></div>
       }
 
       if (!result) {
+        const orKey = (document.getElementById('s-or') || {}).value;
+        const modelStr = (document.getElementById('s-model') || {}).value;
         const antKey = (document.getElementById('s-ant') || {}).value;
-        if (antKey) {
+
+        if (orKey || antKey) {
           try {
-            apAddOutput('Gateway not connected. Executing actively via Live Cloud Backend...');
-            result = await runAgentFallback(a, antKey);
+            apAddOutput('Gateway not connected. Executing actively via Live Cloud Backend (' + (orKey ? 'OpenRouter' : 'Anthropic direct') + ')...');
+            result = await runAgentFallback(a, orKey, antKey, modelStr);
           } catch (e) {
             apAddOutput('Live execution failed: ' + e.message);
             isErr = true;
@@ -3088,18 +3122,18 @@ openclaw gateway</textarea></div>
 
     // ════ Settings ════
     function saveSettings() {
-      ['s-ant', 's-apol', 's-exa', 's-sheet', 's-gw', 's-gwt'].forEach(k => { const e = document.getElementById(k); if (e && e.value) localStorage.setItem(k, e.value); });
-      upApi('s-ant', 'antS', 'antB'); upApi('s-apol', 'apolS', 'apolB'); upApi('s-exa', 'exaS', 'exaB');
+      ['s-or', 's-model', 's-ant', 's-apol', 's-exa', 's-sheet', 's-gw', 's-gwt'].forEach(k => { const e = document.getElementById(k); if (e && e.value !== undefined) localStorage.setItem(k, e.value); });
+      upApi('s-or', 'orS', 'orB'); upApi('s-ant', 'antS', 'antB'); upApi('s-apol', 'apolS', 'apolB'); upApi('s-exa', 'exaS', 'exaB');
       addLog('ok', 'Settings saved');
     }
     function upApi(k, sid, bid) {
       const v = (document.getElementById(k) || {}).value;
       const s = document.getElementById(sid); const b = document.getElementById(bid); if (!s || !b) return;
-      if (v && v.length > 8) { s.textContent = 'Configured'; b.className = 'badge bon'; b.textContent = '✓'; }
+      if (v && v.length > 6) { s.textContent = 'Configured'; b.className = 'badge bon'; b.textContent = '✓'; }
       else { s.textContent = 'Not configured'; b.className = 'badge boff'; b.textContent = '—'; }
     }
     function loadSettings() {
-      ['s-ant', 's-apol', 's-exa', 's-sheet', 's-gw', 's-gwt'].forEach(k => { const v = localStorage.getItem(k); const e = document.getElementById(k); if (v && e) e.value = v; });
+      ['s-or', 's-model', 's-ant', 's-apol', 's-exa', 's-sheet', 's-gw', 's-gwt'].forEach(k => { const v = localStorage.getItem(k); const e = document.getElementById(k); if (v !== null && e) e.value = v; });
       saveSettings();
     }
 
