@@ -2053,7 +2053,7 @@
                 </div>
                 <div class="fr"><label class="fl">Google Sheet URL</label><input class="fi" id="s-sheet"
                     placeholder="https://docs.google.com/spreadsheets/d/…" /></div>
-                <button class="btn btn-p" onclick="saveSettings()">Save API Keys</button>
+                <button class="btn btn-p" onclick="saveSettings(this)">Save API Keys</button>
               </div>
             </div>
             <div class="card mb12">
@@ -2067,7 +2067,7 @@
                     value="93df38fbaf9cd77d8af5a69d3bde6adf76cca094c0bc40f4" />
                   <div class="fhint">Found in ~/.openclaw/openclaw.json</div>
                 </div>
-                <div class="row gap6"><button class="btn btn-p" onclick="saveSettings()">Save</button><button
+                <div class="row gap6"><button class="btn btn-p" onclick="saveSettings(this)">Save</button><button
                     class="btn btn-s" onclick="checkGW()">Test Connection</button></div>
               </div>
             </div>
@@ -2108,7 +2108,7 @@
                       style="color:var(--t3);font-size:11.5px">to</span><input class="fi" id="s-max" value="1000"
                       style="max-width:74px" /><span style="color:var(--t3);font-size:11.5px">employees</span></div>
                 </div>
-                <button class="btn btn-p" onclick="saveSettings()">Save ICP Config</button>
+                <button class="btn btn-p" onclick="saveSettings(this)">Save ICP Config</button>
               </div>
             </div>
           </div>
@@ -2137,7 +2137,7 @@ openclaw gateway</textarea></div>
                       openclaw gateway</div>
                   </div>
                 </div>
-                <button class="btn btn-p btn-sm" onclick="saveTgMsg()">Save Message</button>
+                <button class="btn btn-p btn-sm" onclick="saveTgMsg(this)">Save Message</button>
               </div>
             </div>
             <div class="card mb12">
@@ -2145,7 +2145,7 @@ openclaw gateway</textarea></div>
               <div class="cb">
                 <div class="fr"><label class="fl">Telegram Bot Token</label><input class="fi mono" type="password"
                     id="tg-tok" placeholder="123456:ABC…" /></div>
-                <div class="row gap6"><button class="btn btn-p btn-sm" onclick="saveTgSet()">Save</button><button
+                <div class="row gap6"><button class="btn btn-p btn-sm" onclick="saveTgSet(this)">Save</button><button
                     class="btn btn-s btn-sm" onclick="testTg()">Send Test</button></div>
               </div>
             </div>
@@ -3117,10 +3117,15 @@ openclaw gateway</textarea></div>
     }
 
     // ════ Settings ════
-    function saveSettings() {
+    function saveSettings(btn) {
       ['s-or', 's-model', 's-ant', 's-apol', 's-exa', 's-sheet', 's-gw', 's-gwt'].forEach(k => { const e = document.getElementById(k); if (e && e.value !== undefined) localStorage.setItem(k, e.value); });
       upApi('s-or', 'orS', 'orB'); upApi('s-ant', 'antS', 'antB'); upApi('s-apol', 'apolS', 'apolB'); upApi('s-exa', 'exaS', 'exaB');
       addLog('ok', 'Settings saved');
+      if (btn) {
+        const oldTxt = btn.textContent;
+        btn.textContent = 'Saved!';
+        setTimeout(() => { if (btn.textContent === 'Saved!') btn.textContent = oldTxt; }, 1500);
+      }
     }
     function upApi(k, sid, bid) {
       const v = (document.getElementById(k) || {}).value;
@@ -3135,8 +3140,16 @@ openclaw gateway</textarea></div>
 
     // ════ Telegram ════
     function prevTg() { const t = document.getElementById('tg-off'); const p = document.getElementById('tgPrev'); if (t && p) p.textContent = t.value; }
-    function saveTgMsg() { localStorage.setItem('tg-off', (document.getElementById('tg-off') || {}).value); addLog('ok', 'Offline message saved'); }
-    function saveTgSet() { const t = (document.getElementById('tg-tok') || {}).value; if (t) localStorage.setItem('tg-tok', t); addLog('ok', 'Telegram settings saved'); }
+    function saveTgMsg(btn) {
+      localStorage.setItem('tg-off', (document.getElementById('tg-off') || {}).value);
+      addLog('ok', 'Offline message saved');
+      if (btn) { const oldTxt = btn.textContent; btn.textContent = 'Saved!'; setTimeout(() => { if (btn.textContent === 'Saved!') btn.textContent = oldTxt; }, 1500); }
+    }
+    function saveTgSet(btn) {
+      const t = (document.getElementById('tg-tok') || {}).value; if (t) localStorage.setItem('tg-tok', t);
+      addLog('ok', 'Telegram settings saved');
+      if (btn) { const oldTxt = btn.textContent; btn.textContent = 'Saved!'; setTimeout(() => { if (btn.textContent === 'Saved!') btn.textContent = oldTxt; }, 1500); }
+    }
     function testTg() { addLog('sys', 'Sending test Telegram message…'); setTimeout(() => addLog('ok', 'Test sent — check your bot'), 1200); }
 
     // ════ Misc ════
