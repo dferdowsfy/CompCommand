@@ -1692,6 +1692,11 @@
           <span class="pg-crumb" id="pgC"></span>
         </div>
         <div class="tb-r">
+          <button class="btn btn-g btn-sm row gap6" onclick="toggleNavGw()" id="navGwBtn"
+            style="padding-left:10px;padding-right:10px;border-color:var(--border)">
+            <div class="gwdot chk" id="navGwDot"></div>
+            <span id="navGwTxt">Gateway</span>
+          </button>
           <button class="btn btn-g btn-sm" onclick="refreshAll()">
             <svg viewBox="0 0 16 16" fill="none">
               <path d="M13.5 8A5.5 5.5 0 112.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
@@ -2424,13 +2429,33 @@ openclaw gateway</textarea></div>
       S.gwOn = s === 'on';
       const m = { chk: { cls: 'chk', txt: 'Connecting…', bc: 'boff', bt: 'Checking' }, on: { cls: 'on', txt: lbl || 'Online', bc: 'bon', bt: 'Online' }, off: { cls: '', txt: 'Agents offline', bc: 'boff', bt: 'Offline' } };
       const d = m[s];
-      ['gwDot', 'cwrDot'].forEach(id => { const e = document.getElementById(id); if (e) { e.className = 'gwdot' + (d.cls ? ' ' + d.cls : ''); } });
+      ['gwDot', 'cwrDot', 'navGwDot'].forEach(id => { const e = document.getElementById(id); if (e) { e.className = 'gwdot' + (d.cls ? ' ' + d.cls : ''); } });
       const gt = document.getElementById('gwTxt'); if (gt) gt.textContent = d.txt;
+      const nt = document.getElementById('navGwTxt'); if (nt) nt.textContent = s === 'on' ? 'Gateway On' : 'Gateway Off';
+      const nb = document.getElementById('navGwBtn'); if (nb) nb.style.background = s === 'on' ? 'var(--s2)' : 'transparent';
       const ct = document.getElementById('cwrTxt'); if (ct) ct.textContent = s === 'on' ? 'Connected · ' + ((document.getElementById('s-gw') || {}).value || '127.0.0.1:18789') : 'Not reachable';
       const gb = document.getElementById('gwBadge'); if (gb) { gb.className = 'badge ' + d.bc; gb.textContent = d.bt; }
       const cr = document.getElementById('cwrRow'); if (cr) cr.className = 'cwr' + (s === 'on' ? ' on' : '');
-      S.agents.forEach(a => a.status = s === 'on' ? 'online' : 'offline');
+      S.agents.forEach(a => { if (a.status !== 'running') a.status = s === 'on' ? 'online' : 'offline'; });
       renderDevSum();
+    }
+
+    function toggleNavGw() {
+      if (S.gwOn) {
+        _gwConnected = false;
+        if (_gwWs) { _gwWs.close(); _gwWs = null; }
+        setGW('off');
+        addLog('sys', 'Gateway disconnected manually.');
+      } else {
+        setGW('chk', 'Connecting…');
+        checkGW();
+        setTimeout(() => {
+          if (!S.gwOn) {
+            alert("Could not connect to the local Gateway.\\n\\nMake sure OpenClaw is running locally so agents can connect.\\nRun this in your terminal:\\n\\nopenclaw gateway");
+            setGW('off');
+          }
+        }, 1200);
+      }
     }
 
     // ════ Live Progress Panel ════
