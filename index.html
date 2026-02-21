@@ -2449,10 +2449,31 @@ openclaw gateway</textarea></div>
       } else {
         setGW('chk', 'Connecting…');
         checkGW();
-        setTimeout(() => {
+        setTimeout(async () => {
           if (!S.gwOn) {
-            alert("Could not connect to the local Gateway.\\n\\nMake sure OpenClaw is running locally so agents can connect.\\nRun this in your terminal:\\n\\nopenclaw gateway");
-            setGW('off');
+            try {
+              const res = await fetch('/api/start-gateway', { method: 'POST' });
+              if (!res.ok) throw new Error('API start-gateway failed');
+
+              let retryCount = 0;
+              const retryInterval = setInterval(() => {
+                if (S.gwOn) {
+                  clearInterval(retryInterval);
+                  return;
+                }
+                if (retryCount >= 5) {
+                  clearInterval(retryInterval);
+                  alert("Could not connect to the local Gateway.\n\nMake sure OpenClaw is running locally so agents can connect.\nRun this in your terminal:\n\nopenclaw gateway");
+                  setGW('off');
+                  return;
+                }
+                retryCount++;
+                checkGW();
+              }, 1500);
+            } catch (err) {
+              alert("Could not connect to the local Gateway.\n\nMake sure OpenClaw is running locally so agents can connect.\nRun this in your terminal:\n\nopenclaw gateway");
+              setGW('off');
+            }
           }
         }, 1200);
       }
@@ -3058,7 +3079,7 @@ openclaw gateway</textarea></div>
       const name = document.getElementById('na-name').value.trim();
       if (!id || !name) { alert('ID and name required.'); return; }
       if (S.agents.find(a => a.id === id)) { alert('ID already exists.'); return; }
-      const a = { id, name, icon: document.getElementById('na-icon').value || 'bot', role: document.getElementById('na-role').value, team: document.getElementById('na-team').value, status: 'offline', lastRun: 'Never', soul: document.getElementById('na-soul').value, instr: document.getElementById('na-instr').value, hb: document.getElementById('na-hb').value };
+      const a = { id, name, icon: document.getElementById('na-icon').value || 'bot', role: document.getElementById('na-role').value, team: document.getElementById('na-team').value, status: S.gwOn ? 'online' : 'offline', lastRun: 'Never', soul: document.getElementById('na-soul').value, instr: document.getElementById('na-instr').value, hb: document.getElementById('na-hb').value };
       S.agents.push(a);
       document.getElementById('ds-tot').textContent = S.agents.length;
       const ok = await gwCreateAgent(a);
