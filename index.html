@@ -612,6 +612,304 @@
       left: 16px;
     }
 
+    /* ═══ Live Agent Progress Panel ═══ */
+    .ap-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      background: var(--s1);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, .08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+      transform: translateY(calc(100% - 42px));
+    }
+
+    .ap-panel.open {
+      transform: translateY(0);
+    }
+
+    .ap-panel.active {
+      border-top: 2px solid var(--green);
+    }
+
+    .ap-panel.active .ap-pulse {
+      display: inline-block;
+    }
+
+    .ap-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      cursor: pointer;
+      user-select: none;
+      background: var(--s2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ap-hdr-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ap-hdr-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ap-pulse {
+      display: none;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, .5);
+      animation: ap-pulse-anim 1.5s ease-in-out infinite;
+    }
+
+    @keyframes ap-pulse-anim {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, .4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+      }
+    }
+
+    .ap-agent-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--t1);
+    }
+
+    .ap-status {
+      font-size: 11px;
+      color: var(--t3);
+      background: var(--s3);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .ap-status.running {
+      color: var(--accent);
+      background: var(--al);
+    }
+
+    .ap-status.done {
+      color: var(--green);
+      background: var(--gl);
+    }
+
+    .ap-status.error {
+      color: var(--red);
+      background: var(--rl);
+    }
+
+    .ap-elapsed {
+      font-size: 11px;
+      color: var(--t3);
+      font-family: 'SF Mono', monospace;
+    }
+
+    .ap-toggle {
+      background: none;
+      border: none;
+      color: var(--t3);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+    }
+
+    .ap-body {
+      max-height: 340px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ap-timeline {
+      display: flex;
+      gap: 0;
+      padding: 10px 20px;
+      overflow-x: auto;
+      flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+      min-height: 0;
+    }
+
+    .ap-timeline:empty {
+      display: none;
+      padding: 0;
+      border: none;
+    }
+
+    .ap-step {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    .ap-step-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+      background: var(--s2);
+      color: var(--t3);
+      transition: all .3s;
+    }
+
+    .ap-step.active .ap-step-dot {
+      border-color: var(--accent);
+      background: var(--al);
+      color: var(--accent);
+    }
+
+    .ap-step.done .ap-step-dot {
+      border-color: var(--green);
+      background: var(--gl);
+      color: var(--green);
+    }
+
+    .ap-step.error .ap-step-dot {
+      border-color: var(--red);
+      background: var(--rl);
+      color: var(--red);
+    }
+
+    .ap-step-label {
+      margin-left: 5px;
+      color: var(--t3);
+      font-size: 10.5px;
+    }
+
+    .ap-step.active .ap-step-label {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .ap-step.done .ap-step-label {
+      color: var(--green);
+    }
+
+    .ap-step-arrow {
+      color: var(--t4);
+      margin: 0 6px;
+      font-size: 10px;
+    }
+
+    .ap-stream {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 20px;
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--t2);
+      max-height: 260px;
+    }
+
+    .ap-placeholder {
+      color: var(--t4);
+      font-family: var(--f);
+      font-size: 12px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .ap-line {
+      margin-bottom: 2px;
+    }
+
+    .ap-line.text {
+      color: var(--t1);
+    }
+
+    .ap-line.tool {
+      color: var(--blue);
+      background: var(--bl);
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin: 4px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 100%;
+    }
+
+    .ap-line.tool-result {
+      color: var(--t3);
+      padding-left: 16px;
+      border-left: 2px solid var(--border);
+      margin: 2px 0 6px 10px;
+      font-size: 11px;
+    }
+
+    .ap-line.thinking {
+      color: var(--t4);
+      font-style: italic;
+    }
+
+    .ap-line.error {
+      color: var(--red);
+    }
+
+    .ap-line .ap-tool-icon {
+      font-size: 13px;
+    }
+
+    .ap-line .ap-tool-name {
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .ap-line .ap-tool-detail {
+      color: var(--t3);
+      font-size: 10.5px;
+      max-width: 500px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ap-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 14px;
+      background: var(--accent);
+      animation: ap-blink .8s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+    }
+
+    @keyframes ap-blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+
     /* Tags */
     .tag {
       display: inline-flex;
@@ -1890,6 +2188,28 @@ openclaw gateway</textarea></div>
     </main>
   </div>
 
+  <!-- Live Agent Progress Panel -->
+  <div id="agentProgress" class="ap-panel">
+    <div class="ap-header" onclick="toggleProgressPanel()">
+      <div class="ap-hdr-left">
+        <span class="ap-pulse"></span>
+        <span class="ap-agent-name" id="apAgentName">Agent</span>
+        <span class="ap-status" id="apStatus">Idle</span>
+      </div>
+      <div class="ap-hdr-right">
+        <span class="ap-elapsed" id="apElapsed"></span>
+        <button class="ap-toggle" id="apToggle">▲</button>
+      </div>
+    </div>
+    <div class="ap-body" id="apBody">
+      <div class="ap-timeline" id="apTimeline"></div>
+      <div class="ap-stream" id="apStream">
+        <div class="ap-placeholder">No agent activity yet. Click <strong>Run</strong> on any agent to see live progress.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Agent Edit Modal -->
   <div class="ov" id="agMod">
     <div class="modal wide">
@@ -2098,6 +2418,118 @@ openclaw gateway</textarea></div>
       renderDevSum();
     }
 
+    // ════ Live Progress Panel ════
+    const apState = { open: false, activeAgent: null, lastText: '', steps: 0, timer: null };
+    function toggleProgressPanel(force) {
+      const p = document.getElementById('agentProgress');
+      const b = document.getElementById('apToggle');
+      if (typeof force === 'boolean') apState.open = force;
+      else apState.open = !apState.open;
+      p.classList.toggle('open', apState.open);
+      if (b) b.textContent = apState.open ? '▼' : '▲';
+    }
+
+    function initProgressPanel(a) {
+      if (!a) return;
+      apState.activeAgent = a.id;
+      apState.lastText = '';
+      apState.steps = 1;
+
+      document.getElementById('agentProgress').classList.add('active');
+      document.getElementById('apAgentName').textContent = a.name;
+      document.getElementById('apStatus').className = 'ap-status running';
+      document.getElementById('apStatus').textContent = 'Running';
+      document.getElementById('apElapsed').textContent = '00:00.0';
+      document.getElementById('apTimeline').innerHTML = '<div class="ap-step active" id="aps-0"><div class="ap-step-dot">1</div><div class="ap-step-label">Task Started</div></div>';
+      document.getElementById('apStream').innerHTML = '';
+
+      toggleProgressPanel(true);
+
+      if (apState.timer) clearInterval(apState.timer);
+      const start = Date.now();
+      apState.timer = setInterval(() => {
+        const el = document.getElementById('apElapsed');
+        if (!el || document.getElementById('apStatus').textContent !== 'Running') return clearInterval(apState.timer);
+        const ms = Date.now() - start;
+        const s = Math.floor(ms / 1000);
+        const tf = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') + '.' + Math.floor((ms % 1000) / 100);
+        el.textContent = tf;
+      }, 100);
+    }
+
+    function endProgressPanel(statusTxt, isErr) {
+      document.getElementById('agentProgress').classList.remove('active');
+      const st = document.getElementById('apStatus');
+      st.className = 'ap-status ' + (isErr ? 'error' : 'done');
+      st.textContent = statusTxt || (isErr ? 'Error' : 'Running');
+      clearInterval(apState.timer);
+      document.querySelectorAll('.ap-step.active').forEach(s => { s.classList.remove('active'); s.classList.add(isErr ? 'error' : 'done'); });
+    }
+
+    function apAddStep(label) {
+      const tl = document.getElementById('apTimeline');
+      document.querySelectorAll('.ap-step.active').forEach(s => { s.classList.remove('active'); s.classList.add('done'); });
+      apState.steps++;
+      let ht = tl.innerHTML;
+      if (ht) ht += '<div class="ap-step-arrow">→</div>';
+      tl.innerHTML = ht + '<div class="ap-step active"><div class="ap-step-dot">' + apState.steps + '</div><div class="ap-step-label">' + label + '</div></div>';
+      tl.scrollLeft = tl.scrollWidth;
+    }
+
+    function apAddOutput(text, isThinking) {
+      if (!text) return;
+      if (apState.lastText === text && !isThinking) return;
+      apState.lastText = text;
+
+      const st = document.getElementById('apStream');
+      const div = document.createElement('div');
+      div.className = 'ap-line ' + (isThinking ? 'thinking' : 'text');
+      // escape HTML
+      const t = document.createTextNode(text);
+      if (isThinking) {
+        div.appendChild(t);
+      } else {
+        // Simple markdown parsing for the output to make it look nicer
+        let h = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        h = h.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        h = h.replace(/`(.*?)`/g, '<span style="background:var(--s2);padding:2px 4px;border-radius:4px">$1</span>');
+        div.innerHTML = h;
+      }
+      st.appendChild(div);
+      st.scrollTop = st.scrollHeight;
+
+      // Every few messages, add a step
+      if (st.children.length % 5 === 0 && !isThinking) apAddStep('Thinking...');
+    }
+
+    function apAddTool(toolName, args, result) {
+      const st = document.getElementById('apStream');
+      const div = document.createElement('div');
+      let icon = '🔧', niceName = toolName;
+      if (toolName.includes('read') || toolName.includes('file')) { icon = '📄'; niceName = 'Read File'; }
+      if (toolName.includes('write') || toolName.includes('edit')) { icon = '✏️'; niceName = 'Write File'; }
+      if (toolName.includes('search') || toolName.includes('exa')) { icon = '🔍'; niceName = 'Web Search'; }
+      if (toolName.includes('exec') || toolName.includes('cmd')) { icon = '💻'; niceName = 'Execute CMD'; }
+
+      let argStr = '';
+      if (typeof args === 'object') argStr = JSON.stringify(args).replace(/[{}"\\]/g, ' ').trim();
+      else if (typeof args === 'string') argStr = args;
+
+      if (!result) {
+        div.className = 'ap-line tool';
+        div.innerHTML = '<span class="ap-tool-icon">' + icon + '</span><span class="ap-tool-name">' + niceName + '</span><span class="ap-tool-detail">' + argStr.substring(0, 100) + '</span>';
+        apAddStep('Tool: ' + niceName);
+        st.appendChild(div);
+      } else {
+        div.className = 'ap-line tool-result';
+        let r = typeof result === 'string' ? result : JSON.stringify(result);
+        div.textContent = '→ ' + r.substring(0, 200) + (r.length > 200 ? '...' : '');
+        // Don't append empty tool results
+        if (r.trim()) st.appendChild(div);
+      }
+      st.scrollTop = st.scrollHeight;
+    }
+
     // ════ Gateway WebSocket RPC Client ════
     let _gwWs = null;
     let _gwPending = {};
@@ -2151,14 +2583,55 @@ openclaw gateway</textarea></div>
             }
           }
           if (msg.type === 'event' && msg.event === 'chat') {
-            // Handle streaming chat responses
             const p = msg.payload;
-            if (p && p.state === 'final' && p.message) {
+            if (!p) return;
+
+            // Handle streaming to live progress panel if it's the active agent
+            if (apState.activeAgent && p.state) {
+              if (p.state === 'delta') {
+                if (p.delta?.content) {
+                  // Text chunk
+                  const text = Array.isArray(p.delta.content) ? p.delta.content.filter(c => c.type === 'text').map(c => c.text).join('') : (typeof p.delta.content === 'string' ? p.delta.content : '');
+                  if (text) {
+                    // Collect chunks and print them line by line occasionally
+                    if (!apState._buffer) apState._buffer = '';
+                    apState._buffer += text;
+                    if (apState._buffer.includes('\n')) {
+                      const lines = apState._buffer.split('\n');
+                      apState._buffer = lines.pop(); // keep remainder
+                      lines.forEach(l => { if (l.trim()) apAddOutput(l.trim()); });
+                    } else if (apState._buffer.length > 100) {
+                      apAddOutput(apState._buffer.trim() + '...');
+                      apState._buffer = '';
+                    }
+                  }
+                }
+                if (p.delta?.tool_calls) {
+                  p.delta.tool_calls.forEach(tc => {
+                    if (tc.function && tc.function.name) {
+                      let args = {}; try { args = JSON.parse(tc.function.arguments || '{}'); } catch (e) { }
+                      apAddTool(tc.function.name, args);
+                    }
+                  });
+                }
+              }
+              if (p.state === 'tool_result' && p.message?.tool_calls) {
+                // Not always cleanly formatted, but try
+                apAddTool('result', '', 'Tool execution completed');
+              }
+              if (p.state === 'final') {
+                if (apState._buffer) { apAddOutput(apState._buffer.trim()); apState._buffer = ''; }
+                apAddStep('Complete');
+              }
+            }
+
+            // Handle final chat responses for resolution
+            if (p.state === 'final' && p.message) {
               const txt = typeof p.message === 'string' ? p.message :
                 (p.message.content && Array.isArray(p.message.content))
                   ? p.message.content.filter(c => c.type === 'text').map(c => c.text).join('')
                   : JSON.stringify(p.message);
-              // Resolve any pending chat request for this session
+              // Resolve any pending chat request
               Object.keys(_gwPending).forEach(id => {
                 if (id.startsWith('chat-')) { _gwPending[id].resolve(txt); delete _gwPending[id]; }
               });
@@ -2284,29 +2757,53 @@ openclaw gateway</textarea></div>
       a.status = 'running';
       renderGrid(a.team); renderDevSum();
       addLog('ag', 'Running ' + a.name + '…', a.name);
+      initProgressPanel(a);
 
       // Try gateway first, fall back to simulation
       let result = null;
+      let finalState = 'Complete';
+      let isErr = false;
+
       if (S.gwOn) {
         try {
+          apAddStep('Connecting to Gateway');
           result = await gwSend(id, 'Execute workflow.');
           addLog('ok', a.name + ': ' + (result || 'done').slice(0, 120));
         } catch (e) {
           addLog('w', a.name + ' gateway error: ' + e.message + ' — simulating locally');
+          apAddOutput('⚠️ Gateway offline — beginning local simulation...');
         }
+      } else {
+        apAddOutput('Gateway not connected. Local simulation mode enabled.');
       }
 
       if (!result) {
-        // Simulate execution with realistic delay
-        await new Promise(r => setTimeout(r, 1500 + Math.random() * 2000));
+        // Simulate execution with realistic delay + progress panel visualization
+        apAddStep('Searching context');
+        await new Promise(r => setTimeout(r, 800));
+        apAddTool('exa_search', { query: 'compliance technology news' });
+        await new Promise(r => setTimeout(r, 600));
+        apAddTool('exa_search', { query: 'compliance technology news' }, 'Found 5 relevant items');
+        apAddOutput('Found recent SEC regulatory updates regarding AI governance.');
+
+        apAddStep('Drafting response');
+        await new Promise(r => setTimeout(r, 1200));
+        apAddOutput('Reviewing standard policies. Formatting output against guidelines.');
+
+        apAddStep('Finalizing');
+        await new Promise(r => setTimeout(r, 800));
+
         const outcomes = [
           'Workflow complete — processed successfully',
           'Task executed — all checks passed',
           'Run finished — results ready for review',
           'Cycle complete — output updated'
         ];
-        addLog('ok', a.name + ': ' + outcomes[Math.floor(Math.random() * outcomes.length)]);
+        result = outcomes[Math.floor(Math.random() * outcomes.length)];
+        addLog('ok', a.name + ': ' + result);
       }
+
+      endProgressPanel(finalState, isErr);
 
       // Update state
       const now = new Date();
