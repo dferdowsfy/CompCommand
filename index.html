@@ -2034,14 +2034,10 @@
                     id="s-or" placeholder="sk-or-v1-…" />
                   <div class="fhint">Primary LLM backend for Agents via OpenRouter</div>
                 </div>
-                <div class="fr"><label class="fl">Model Selection</label>
-                  <select class="fsel" id="s-model">
-                    <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-                    <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
-                    <option value="openai/gpt-4o">GPT-4o</option>
-                    <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
-                    <option value="google/gemini-pro-1.5">Gemini 1.5 Pro</option>
-                  </select>
+                <div class="fr"><label class="fl">OpenRouter Model</label><input class="fi mono" id="s-model"
+                    placeholder="e.g. anthropic/claude-3.5-sonnet" />
+                  <div class="fhint">Find models to paste here at <a href="https://openrouter.ai/models" target="_blank"
+                      style="color:var(--blue)">openrouter.ai/models</a></div>
                 </div>
                 <div class="fr"><label class="fl">Anthropic API Key</label><input class="fi mono" type="password"
                     id="s-ant" placeholder="sk-ant-…" />
